@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  audit:
+    name: audit + self-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # --ignore-scripts skips the husky install (no git hooks needed in CI)
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Rule audit
+        run: npm run audit:rules
+
+      - name: Script self-tests
+        run: npm test

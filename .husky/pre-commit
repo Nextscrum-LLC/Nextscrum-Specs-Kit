@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+# Husky pre-commit hook - gates every commit through the rule audit + tests.
+# This hook enforces the machine-checkable subset of the locked rules.
+
+set -e
+
+# 1. Rule audit (em dashes / banned words in user-facing files, ledger
+#    done-gate, spec-ref integrity, marker surfacing, etc).
+echo "Running audit:rules..."
+node scripts/audit-rules.mjs
+
+# 2. Tests must pass. The test suite is the regression net for everything
+#    we ship. If it fails, the commit is wrong.
+# RESKIN: replace `npm test` with your project's test command, e.g.
+#   npm test --prefix backend --silent
+#   pnpm test
+#   pytest -q
+echo "Running tests..."
+npm test
+
+echo "pre-commit checks passed"

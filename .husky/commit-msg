@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+# Husky commit-msg hook - block known anti-patterns in the commit message itself.
+# See scripts/audit-rules.mjs and the rules index (R6, R7, R21).
+
+MSG_FILE="$1"
+MSG=$(cat "$MSG_FILE")
+
+# R7: No Co-Authored-By: <AI tool> trailer. IP belongs to NextScrum.
+if echo "$MSG" | grep -iE "Co-Authored-By:[[:space:]]*(Claude|ChatGPT|GPT|Copilot|Anthropic|OpenAI|noreply@anthropic\.com)" >/dev/null; then
+  echo "x  commit-msg blocked: 'Co-Authored-By: <AI tool>' trailer is banned (R7)."
+  echo "   All IP belongs to NextScrum. Remove the trailer and try again."
+  exit 1
+fi
+
+# R6: No em dashes in commit messages (the voice rule applies to commits too).
+if echo "$MSG" | grep -P '\xe2\x80\x94' >/dev/null 2>&1; then
+  echo "x  commit-msg blocked: em dash found. Use parens, periods, or two sentences instead (R6)."
+  exit 1
+fi
+
+# Conventional commits format (loose): type(scope): subject
+# Allowed types: feat, fix, chore, docs, test, refactor, perf, ci, build, style, revert
+SUBJECT_LINE=$(echo "$MSG" | grep -v '^#' | head -1)
+if ! echo "$SUBJECT_LINE" | grep -qE '^(feat|fix|chore|docs|test|refactor|perf|ci|build|style|revert)(\([a-z0-9.-]+\))?!?: .+'; then
+  echo "x  commit-msg blocked: subject must follow Conventional Commits."
+  echo "   Got:      $SUBJECT_LINE"
+  echo "   Expected: type(scope): subject"
+  echo "   Types:    feat | fix | chore | docs | test | refactor | perf | ci | build | style | revert"
+  exit 1
+fi
+
+# R21: required review markers per file-pattern trigger map.
+# Reads staged files + this commit message, fails if a required
+# [chain-tracer-ok] / [db-reviewer-ok] marker is missing.
+node scripts/check-review-markers.mjs "$MSG_FILE"
+RC=$?
+if [ $RC -ne 0 ]; then
+  exit $RC
+fi
+
+exit 0

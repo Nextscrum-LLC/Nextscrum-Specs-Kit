@@ -1,0 +1,5 @@
+# Normalize line endings: store LF in the repo for every text file so the
+# husky shell hooks and the scripts behave the same on Windows, macOS, and CI.
+* text=auto eol=lf
+*.png binary
+*.ico binary

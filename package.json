@@ -1,0 +1,35 @@
+{
+  "name": "nextscrum-specs-kit",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Stack-neutral specs kit: spec-driven development with machine-enforced discipline (rule audit, ledger done-gate, review markers, husky hooks).",
+  "license": "Apache-2.0",
+  "author": "NextScrum LLC (https://nextscrum.com)",
+  "homepage": "https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit/issues"
+  },
+  "keywords": [
+    "spec-driven-development",
+    "spec-kit",
+    "ears",
+    "claude-code",
+    "engineering-discipline",
+    "ci"
+  ],
+  "scripts": {
+    "audit:rules": "node scripts/audit-rules.mjs",
+    "prepare": "husky",
+    "test": "node scripts/check-ledger-done-gate.mjs --self-test && node scripts/check-review-markers.mjs --self-test && node scripts/check-doc-orphans.mjs --self-test && node scripts/rules/23-spec-refs.mjs --self-test && node scripts/rules/25-test-coverage.mjs --self-test",
+    "docs:serve": "docsify serve . --port 4000"
+  },
+  "devDependencies": {
+    "docsify-cli": "^4",
+    "husky": "^9"
+  }
+}

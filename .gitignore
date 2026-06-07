@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+dist/
+build/
+coverage/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# local dev artifacts
+_shot-*.png
+*.local

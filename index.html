@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="NextScrum Specs Kit: spec-driven development with enforcement built in. Fork it, re-skin it, ship on rails." />
+  <title>NextScrum Specs Kit</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <!-- Brand fonts: Lexend (display) + IBM Plex Mono + IBM Plex Serif (Google), Switzer (Fontshare) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700;800;900&family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=switzer@300,400,500,600,700&display=swap" rel="stylesheet" />
+
+  <!-- Docsify base theme (heavily overridden below) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css" />
+
+  <style>
+    /* ============================================================
+       NextScrum brand tokens (editorial multi-tone: cream / cobalt / black)
+       ============================================================ */
+    :root {
+      /* Surfaces (default cream scope) */
+      --bg: #fbf9f8; --bg-1: #f6f3f2; --bg-2: #f0eded; --bg-3: #ffffff;
+      --bg-high: #eae8e7; --bg-highest: #e4e2e1; --bg-dim: #dcd9d9;
+
+      /* Foreground / text */
+      --fg: #1b1c1c; --fg-dim: #434655; --fg-mute: #747686; --fg-faint: #c4c5d7;
+      --line: rgba(27,28,28,.08); --line-2: rgba(27,28,28,.12); --line-3: rgba(27,28,28,.18);
+
+      /* Cobalt primary family (brand accent) */
+      --primary: #0037b0; --primary-container: #1D4ED8; --primary-container-2: #2a5ce8;
+      --primary-fixed: #dce1ff; --primary-fixed-dim: #b7c4ff; --on-primary: #ffffff;
+
+      /* Status */
+      --green: #22c55e; --red: #ba1a1a; --amber: #f59e0b;
+
+      /* Fonts */
+      --fd: "Lexend", system-ui, sans-serif;
+      --fb: "Switzer", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --fm: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --fd-editorial: "IBM Plex Serif", Georgia, serif;
+
+      /* Docsify theme hook + layout */
+      --theme-color: var(--primary-container);
+      --sidebar-width: 300px;
+      --radius: 3px;            /* sharp corners */
+    }
+
+    /* Spotlight scope: wrap any band in class="on-dark" */
+    .on-dark {
+      --bg: #050505; --bg-1: #0a0a0a; --bg-2: #1a1a1a; --bg-3: #17171F;
+      --bg-high: #17171F;
+      --fg: #F5F5F7; --fg-dim: #A7A7B0; --fg-mute: #6F6F78; --fg-faint: #3C3C44;
+      --line: rgba(255,255,255,.10); --line-2: rgba(255,255,255,.14);
+    }
+
+    html, body { background: var(--bg); }
+    body {
+      font-family: var(--fb);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================================
+       Sidebar (sticky, full height, hairline divider)
+       ============================================================ */
+    .sidebar {
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      width: var(--sidebar-width);
+      background: var(--bg-1);
+      border-right: 1px solid var(--line-2);
+      padding-top: 6px;
+      transition: transform .25s var(--ease, ease);
+    }
+    .content, .search, .sidebar-toggle { transition: none; }
+    @media (min-width: 769px) {
+      .content { left: var(--sidebar-width); }
+      body .sidebar { transform: translateX(0); }
+    }
+
+    .sidebar .app-name { margin: 22px 0 10px; padding: 0 20px; }
+    .sidebar .app-name-link { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+    .ns-wordmark { width: 188px; max-width: 80%; height: auto; display: block; }
+    .ns-kicker {
+      font-family: var(--fm); font-weight: 500; font-size: 10px;
+      letter-spacing: .26em; text-transform: uppercase; color: var(--primary-container);
+      padding-left: 2px;
+    }
+
+    /* group labels = kickers */
+    .sidebar-nav { padding: 4px 12px 80px; }
+    .sidebar-nav > ul > li > strong,
+    .sidebar-nav > ul > li > p {
+      display: block; margin: 22px 8px 8px;
+      font-family: var(--fd); font-size: 10.5px; font-weight: 900;
+      letter-spacing: .2em; text-transform: uppercase; color: var(--primary-container);
+    }
+    .sidebar-nav ul li a {
+      color: var(--fg-dim);
+      font-family: var(--fb); font-size: 14.5px; font-weight: 500;
+      padding: 7px 12px; border-radius: var(--radius); display: block;
+      border-left: 0; transition: background .12s, color .12s;
+    }
+    .sidebar-nav ul li a:hover {
+      color: var(--primary-container); background: var(--primary-fixed); text-decoration: none;
+    }
+    .sidebar-nav li.active > a {
+      color: var(--primary-container) !important; background: var(--primary-fixed);
+      font-weight: 600; border-right: 0;
+    }
+
+    /* ============================================================
+       Search (sharp, hairline)
+       ============================================================ */
+    .search { margin: 16px 16px 4px; padding: 0; border-bottom: 1px solid var(--line); }
+    .search .input-wrap {
+      background: var(--bg-3); border: 1px solid var(--line-3);
+      border-radius: var(--radius); margin-bottom: 16px; overflow: hidden;
+    }
+    .search input { font-family: var(--fb); font-size: 14px; padding: 11px 13px; color: var(--fg); }
+    .search input::placeholder { color: var(--fg-mute); }
+    .search .results-panel { font-family: var(--fb); font-size: 14px; }
+    .search .matching-post { border-bottom: 1px solid var(--line); }
+    .search p.search-keyword { color: var(--primary-container); }
+    .search a { color: var(--fg); }
+
+    /* ============================================================
+       Content
+       ============================================================ */
+    .markdown-section { max-width: 880px; padding: 34px 0 90px; }
+    .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 {
+      font-family: var(--fd); color: var(--fg); letter-spacing: -0.015em;
+    }
+    .markdown-section h1 { font-size: 2.4rem; font-weight: 800; line-height: 1.08; margin: .3em 0 .5em; }
+    .markdown-section h2 {
+      font-size: 1.5rem; font-weight: 700; margin-top: 2.4rem;
+      padding-bottom: .4rem; border-bottom: 1px solid var(--line-2);
+    }
+    .markdown-section h3 { font-size: 1.16rem; font-weight: 700; margin-top: 1.7rem; }
+    .markdown-section p, .markdown-section li { color: var(--fg-dim); line-height: 1.74; }
+    .markdown-section strong { color: var(--fg); }
+    .markdown-section a { color: var(--primary-container); font-weight: 500; text-decoration: none; }
+    .markdown-section a:hover { text-decoration: underline; }
+
+    .markdown-section blockquote {
+      border-left: 2px solid var(--primary-container);
+      background: var(--bg-2); border-radius: 0; color: var(--fg-dim);
+      margin: 1.3em 0; padding: 6px 20px;
+    }
+    .markdown-section blockquote p { color: var(--fg-dim); }
+
+    /* tables: open editorial, horizontal hairlines only (no zebra, no vertical rules) */
+    .markdown-section table {
+      display: table; width: 100%; border-collapse: collapse;
+      border: 0; border-radius: 0; font-size: 13.5px; margin: 1.4em 0;
+    }
+    .markdown-section th {
+      background: transparent; color: var(--fg); text-align: left;
+      font-family: var(--fd); font-weight: 700; font-size: 11.5px;
+      letter-spacing: .06em; text-transform: uppercase;
+      border: 0; border-bottom: 1.5px solid var(--line-3); padding: 9px 16px 9px 0;
+    }
+    .markdown-section td {
+      border: 0; border-bottom: 1px solid var(--line);
+      padding: 11px 16px 11px 0; vertical-align: top;
+    }
+    .markdown-section th:last-child, .markdown-section td:last-child { padding-right: 0; }
+
+    /* inline code: IBM Plex Mono on raised cream, cobalt ink, no border */
+    .markdown-section code {
+      font-family: var(--fm); background: var(--bg-high); color: var(--primary);
+      padding: 1px 6px; border-radius: var(--radius); font-size: .85em;
+    }
+    /* code blocks: dark spotlight panel, IBM Plex Mono */
+    .markdown-section pre {
+      background: #0c0c10; border: 1px solid #20222c; border-radius: var(--radius);
+      box-shadow: none; padding: 0;
+    }
+    .markdown-section pre > code {
+      font-family: var(--fm); background: transparent; color: #e7e8ef;
+      font-size: 13px; line-height: 1.62; padding: 18px; display: block;
+      border: 0; -webkit-text-fill-color: initial;
+    }
+    .token.comment { color: #6f7488; }
+    .token.keyword, .token.tag, .token.selector { color: #b7c4ff; }
+    .token.string, .token.attr-value { color: #9ff0c8; }
+    .token.function, .token.class-name { color: #8ab4ff; }
+    .token.number, .token.boolean, .token.constant { color: #f6a96b; }
+    .token.operator, .token.punctuation { color: #aeb2c2; }
+    .docsify-copy-code-button {
+      background: var(--primary-container) !important; color: #fff !important;
+      font-family: var(--fb) !important; font-size: 11.5px !important; font-weight: 600 !important;
+      letter-spacing: .03em; border-radius: 0 var(--radius) 0 var(--radius) !important;
+    }
+
+    /* ============================================================
+       Cover page (cream, editorial, oversized uppercase display)
+       ============================================================ */
+    section.cover { background: var(--bg); }
+    section.cover.show { background: var(--bg) !important; }
+    section.cover { text-align: center; }
+    section.cover .cover-main { max-width: 760px; margin: 0 auto; text-align: center; }
+    section.cover .cover-main p:last-child { text-align: center; }
+    @media (min-width: 769px) {
+      section.cover { padding-left: var(--sidebar-width); box-sizing: border-box; }
+    }
+    section.cover .cover-main img { width: auto; max-width: 320px; height: auto; border-radius: 0; margin-bottom: 4px; }
+    section.cover h1 {
+      font-family: var(--fd); font-weight: 900; font-size: 3.0rem; line-height: 1.02;
+      letter-spacing: -0.02em; text-transform: uppercase; margin: .15em 0 .2em; color: var(--fg);
+    }
+    section.cover h1 a { color: var(--fg); }
+    section.cover h1 small { display: none; }
+    section.cover blockquote p {
+      font-family: var(--fm); font-size: 1.0rem; color: var(--primary-container);
+      letter-spacing: .16em; text-transform: uppercase; font-weight: 500;
+    }
+    section.cover .cover-main ul { font-family: var(--fb); font-size: 1.02rem; color: var(--fg-dim); }
+    section.cover .cover-main > p:last-child a {
+      border-radius: var(--radius); padding: 13px 26px; font-family: var(--fb);
+      font-weight: 600; font-size: 15px; letter-spacing: .01em; border-width: 1.5px;
+      transition: transform .14s var(--ease, ease), background .14s;
+    }
+    section.cover .cover-main > p:last-child a:first-child {
+      background: var(--primary-container); border-color: var(--primary-container); color: #fff;
+    }
+    section.cover .cover-main > p:last-child a:first-child:hover { background: var(--primary); transform: translateY(-2px); }
+    section.cover .cover-main > p:last-child a:last-child {
+      border-color: var(--line-3); color: var(--fg); background: transparent;
+    }
+    section.cover .cover-main > p:last-child a:last-child:hover { border-color: var(--primary-container); color: var(--primary-container); }
+
+    /* ============================================================
+       Misc
+       ============================================================ */
+    .markdown-section .pagination-item-title { color: var(--primary-container); font-family: var(--fb); }
+    .pagination-item { border-top: 1px solid var(--line); }
+    .sidebar::-webkit-scrollbar { width: 8px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--bg-dim); border-radius: 8px; }
+    .markdown-section img { border-radius: var(--radius); }
+
+    /* ---------- Feature matrix (icons, centered, featured column) ---------- */
+    .table-scroll { overflow-x: auto; margin: 1.6em 0; border: 1px solid var(--line-2); border-radius: var(--radius); }
+    .table-scroll table { margin: 0; border: 0; }
+    .table-scroll table th { text-align: center; }
+    .table-scroll table th:first-child,
+    .table-scroll table td:first-child {
+      position: sticky; left: 0; z-index: 1; text-align: left;
+      background: var(--bg); color: var(--fg); font-weight: 600;
+    }
+    .table-scroll table td, .table-scroll table th { padding: 14px 18px; }
+    td.cell-status { text-align: center; vertical-align: middle; }
+    td.cell-status .mk { font-size: 18px; font-weight: 700; line-height: 1; }
+    .mk-yes { color: #16a34a; }
+    .mk-part { color: #d97706; }
+    .mk-no { color: var(--fg-faint); }
+    td.cell-note { text-align: center; font-family: var(--fb); font-size: 11.5px; color: var(--fg-mute); }
+    /* featured column: an elevated white card on the cream table */
+    .table-scroll table th.col-featured,
+    .table-scroll table td.col-featured { background: #ffffff; }
+    .table-scroll table th.col-featured { color: var(--primary-container); }
+    .table-scroll table td.col-featured {
+      box-shadow: inset 1px 0 var(--primary-fixed-dim), inset -1px 0 var(--primary-fixed-dim);
+    }
+    .table-scroll table tr:first-child th.col-featured {
+      box-shadow: inset 1px 0 var(--primary-fixed-dim), inset -1px 0 var(--primary-fixed-dim), inset 0 3px 0 var(--primary-container);
+    }
+
+    /* ---------- Branded footer ---------- */
+    .ns-footer {
+      margin-top: 64px; background: #0c0c10; color: #e7e8ef;
+      border-radius: var(--radius); padding: 38px 34px 20px; font-family: var(--fb);
+    }
+    .ns-footer-inner { display: flex; flex-wrap: wrap; gap: 30px; justify-content: space-between; align-items: flex-start; }
+    .ns-footer-brand img { height: 26px; display: block; }
+    .ns-footer-brand p { color: #9a9caa; margin: 14px 0 0; font-size: 13.5px; line-height: 1.55; max-width: 250px; }
+    .ns-footer-col h4 {
+      font-family: var(--fd); font-size: 10.5px; font-weight: 900; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--primary-fixed-dim); margin: 0 0 12px;
+    }
+    .ns-footer-links { display: flex; flex-direction: column; gap: 9px; }
+    .ns-footer-links a { color: #c7c9d6; font-size: 14px; text-decoration: none; }
+    .ns-footer-links a:hover { color: #fff; }
+    .ns-footer-cta { display: flex; flex-direction: column; gap: 11px; align-items: flex-start; }
+    .ns-footer .ns-clone {
+      background: var(--primary-container); color: #fff; padding: 11px 20px;
+      border-radius: var(--radius); font-weight: 600; font-size: 14px; text-decoration: none;
+      display: inline-block;
+    }
+    .ns-footer .ns-clone:hover { background: var(--primary-container-2); color: #fff; }
+    .ns-footer-cta code {
+      background: #17171f; color: #aeb2c2; font-family: var(--fm); font-size: 11.5px;
+      padding: 8px 11px; border-radius: var(--radius); border: 0;
+    }
+    .ns-footer-base {
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+      margin-top: 30px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.1);
+      color: #6f6f78; font-size: 12.5px;
+    }
+    .ns-footer-base a { color: #9a9caa; text-decoration: none; }
+    .ns-footer-base a:hover { color: #fff; }
+  </style>
+</head>
+<body>
+  <div id="app">Loading the NextScrum Specs Kit...</div>
+
+  <script>
+    window.$docsify = {
+      name: '<img class="ns-wordmark" src="assets/logo-blue.svg" alt="NextScrum" /><span class="ns-kicker">Specs Kit</span>',
+      loadSidebar: true,
+      loadNavbar: false,
+      repo: 'Nextscrum-LLC/Nextscrum-Specs-Kit',
+      coverpage: true,
+      onlyCover: false,
+      auto2top: true,
+      relativePath: true,
+      subMaxLevel: 0,
+      maxLevel: 3,
+      homepage: 'README.md',
+      notFoundPage: true,
+      search: {
+        paths: 'auto',
+        placeholder: 'Search the kit  (press / )',
+        noData: 'Nothing matched. Try another word.',
+        depth: 6,
+        hideOtherSidebarContent: true,
+      },
+      copyCode: { buttonText: 'Copy', successText: 'Copied' },
+      pagination: { crossChapter: true, crossChapterText: true },
+      plugins: [
+        function (hook) {
+          var FOOTER = `
+<footer class="ns-footer on-dark">
+  <div class="ns-footer-inner">
+    <div class="ns-footer-brand">
+      <a href="https://nextscrum.com" target="_blank" rel="noopener"><img src="assets/logo-white.svg" alt="NextScrum LLC" /></a>
+      <p>Spec-driven development with enforcement built in.</p>
+    </div>
+    <div class="ns-footer-col">
+      <h4>Docs</h4>
+      <nav class="ns-footer-links">
+        <a href="#/GETTING-STARTED">Getting started</a>
+        <a href="#/docs/SPEC-SYSTEM">Spec system</a>
+        <a href="#/docs/TESTING-SYSTEM">Testing system</a>
+        <a href="#/docs/COMPARISON">Comparison</a>
+      </nav>
+    </div>
+    <div class="ns-footer-col ns-footer-cta">
+      <h4>Get the kit</h4>
+      <a class="ns-clone" href="https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit" target="_blank" rel="noopener">View on GitHub</a>
+      <code>git clone https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit.git</code>
+    </div>
+  </div>
+  <div class="ns-footer-base">
+    <span>&copy; 2026 <a href="https://nextscrum.com" target="_blank" rel="noopener">NextScrum LLC</a>. Apache-2.0 Licensed.</span>
+    <span><a href="https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit" target="_blank" rel="noopener">View source on GitHub</a></span>
+  </div>
+</footer>`;
+          // Hide internal "> RESKIN:" adaptation notes from the published site.
+          // They stay in the source files for anyone who forks the kit.
+          hook.beforeEach(function (content) {
+            var lines = content.split('\n');
+            var out = [];
+            var inReskin = false;
+            for (var i = 0; i < lines.length; i++) {
+              var line = lines[i];
+              if (/^>\s*RESKIN\b/i.test(line)) { inReskin = true; continue; }
+              if (inReskin) {
+                if (/^>/.test(line)) continue;            // continuation of the note
+                inReskin = false;
+                if (line.trim() === '' && out.length && out[out.length - 1].trim() === '') continue;
+              }
+              out.push(line);
+            }
+            return out.join('\n');
+          });
+          hook.afterEach(function (html, next) { next(html + FOOTER); });
+          var ICONS = { yes: '✓', part: '◐', no: '✕' };
+          hook.doneEach(function () {
+            document.querySelectorAll('.markdown-section table').forEach(function (tbl) {
+              if (tbl.dataset.enhanced) return;
+              var statusRe = /^(yes|no|part)\b/i;
+              var isMatrix = false;
+              tbl.querySelectorAll('td').forEach(function (td) {
+                if (statusRe.test(td.textContent.trim())) isMatrix = true;
+              });
+              if (!isMatrix) return;
+              tbl.dataset.enhanced = '1';
+              // wrap for horizontal scroll + sticky first column
+              if (tbl.parentElement && !tbl.parentElement.classList.contains('table-scroll')) {
+                var w = document.createElement('div');
+                w.className = 'table-scroll';
+                tbl.parentNode.insertBefore(w, tbl);
+                w.appendChild(tbl);
+              }
+              // highlight the second column (the kit itself) as featured
+              tbl.querySelectorAll('tr').forEach(function (tr) {
+                if (tr.children[1]) tr.children[1].classList.add('col-featured');
+              });
+              // turn yes/part/no cells into a centered icon + small qualifier
+              tbl.querySelectorAll('td').forEach(function (td) {
+                var raw = td.textContent.trim();
+                var m = raw.match(/^(yes|no|part)\b(.*)$/i);
+                if (m) {
+                  var key = m[1].toLowerCase();
+                  var q = m[2].replace(/[()]/g, '').trim();
+                  td.classList.add('cell-status');
+                  if (q) td.title = q;            // qualifier on hover, keeps cells clean
+                  td.innerHTML = '<span class="mk mk-' + key + '">' + ICONS[key] + '</span>';
+                } else if (raw && td.cellIndex > 0) {
+                  td.classList.add('cell-note');   // free-text data cell (regenerates, archive, etc.)
+                }
+              });
+            });
+          });
+        },
+      ],
+    };
+
+    // Press "/" to jump to search
+    document.addEventListener('keydown', function (e) {
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+        var box = document.querySelector('.search input');
+        if (box) { e.preventDefault(); box.focus(); }
+      }
+    });
+  </script>
+
+  <!-- Docsify core + plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
+
+  <!-- syntax highlighting -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-powershell.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-markdown.min.js"></script>
+</body>
+</html>

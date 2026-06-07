@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+# Husky pre-push hook - paranoid checks before code leaves the dev machine.
+# Pre-push is the last chance to catch a stale version stamp or a missed
+# test pass after a series of WIP commits.
+
+set -e
+
+# RESKIN: version-stamp drift check. If your project has a version file
+# (package.json, a VERSION file, a manifest, etc.) that must be bumped
+# whenever certain directories change, wire it here. Example skeleton:
+#
+#   VERSION_FILE="<VERSION_FILE>"        # RESKIN: set this per project
+#   WATCH_GLOB='^<PROJECT_SRC_GLOB>/'    # RESKIN: dirs that demand a bump
+#   if git diff --name-only @{push}..HEAD 2>/dev/null | grep -q "$WATCH_GLOB"; then
+#     CURRENT_VER=$(grep -oP '"version":\s*"\K[^"]+' "$VERSION_FILE")
+#     LAST_VER=$(git show @{push}:"$VERSION_FILE" 2>/dev/null | grep -oP '"version":\s*"\K[^"]+' || echo "")
+#     if [ "$CURRENT_VER" = "$LAST_VER" ]; then
+#       echo "!  $WATCH_GLOB changed but $VERSION_FILE version is still $CURRENT_VER."
+#       echo "   Bump the version before pushing. Warning only; not blocking."
+#     fi
+#   fi
+
+# Full test run one more time. Pre-commit already ran it, but if you
+# amend or rebase, you can sneak a broken state through.
+# RESKIN: replace `npm test` with your project's test command.
+echo "Pre-push: final test run..."
+npm test
+
+echo "pre-push checks passed"
