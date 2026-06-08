@@ -10,6 +10,11 @@ convention (trust plus review), not a locked rule.
 Add a rule with the `/rule` command: it assigns the next number, appends a row
 here and in `CLAUDE.md`, and scaffolds the enforcing check.
 
+> **Three folders are named `rules`; they do not overlap.** `docs/rules/` (this
+> page) is what the rules *are*, for humans. `.claude/rules/` is how the AI agent
+> *applies* them (path-scoped instructions Claude Code auto-loads). `scripts/rules/`
+> is how they are *enforced* (the executable checkers). Are -> apply -> enforce.
+
 ## Core rules (R1-R8)
 
 These are the kit's locked rules. All are **script-enforced** (mechanical), run
@@ -61,3 +66,31 @@ project-specific guards a mature codebase grows.
 Example uses: a WordPress fork bans unescaped output in `theme/**`; a Laravel
 fork bans `DB::raw` in `app/**`; any project requires a schema-decision doc
 whenever `migrations/**` changes. The engine is the same; you supply the config.
+
+## The doc -> rule reverse-lookup banner (convention)
+
+This page is the **forward** lookup: rule -> where it lives -> what enforces it.
+The **reverse** lookup is just as important. When you are reading a doc (an ADR,
+a design doc, a runbook), you should be able to see at a glance which rule
+governs it without first knowing that rule exists. A doc that elaborates a rule,
+or whose content a rule protects, carries a one-line banner at the very top that
+links back to the rule and to this index.
+
+Two banner shapes, by relationship:
+
+- **Detail home** (the doc *is* the rule's long-form rationale):
+  `> **Backs rule RN** (short name). See the [rules index](README.md).`
+- **Governed by** (the doc records something a rule protects from regressing):
+  `> **Relates to RN** (short name): <one line on the link>. See the [rules index](README.md).`
+
+The banner sits above any other front-matter note, on its own line. Keep it to a
+sentence or two; its job is the link, not the explanation.
+
+**Where it applies in the kit today.** The core rules (R1-R8) are one-line,
+script-enforced rules with no separate detail doc, so none needs a "Backs rule"
+banner yet. The worked example shows the "Relates to" shape: the example ADR
+[`0002-example-decision.md`](../decisions/0002-example-decision.md) carries a
+banner back to R8, because the security invariant it records is locked by a
+tested acceptance criterion. As a fork grows rules that need their own detail
+docs (continuing from R9), give each such doc a "Backs rule" banner so the
+reverse lookup never goes stale.

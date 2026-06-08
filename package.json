@@ -1,6 +1,6 @@
 {
   "name": "nextscrum-specs-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": false,
   "type": "module",
   "description": "Stack-neutral specs kit: spec-driven development with machine-enforced discipline (rule audit, ledger done-gate, review markers, husky hooks).",

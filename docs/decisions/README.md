@@ -14,6 +14,11 @@ system is shaped the way it is.
   0007`. Never delete an ADR; supersede it.
 - When a decision is locked, add a one-line row for it in the project
   `CLAUDE.md` "Architectural decisions" section pointing back to the ADR.
+- When an ADR elaborates a rule, or records something a rule protects from
+  regressing, add a one-line doc -> rule reverse-lookup banner at the top
+  linking back to the rule (see the convention in
+  [docs/rules/README.md](../rules/README.md)). `0002-example-decision.md` shows
+  the shape.
 
 ## Why bother
 

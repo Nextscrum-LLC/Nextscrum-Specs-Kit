@@ -51,7 +51,7 @@ All R1-R8 are **script-enforced** (mechanical). A rule with no machine check is 
 also runs warn-only auxiliary checks (doc-orphans, spec-change-ripple,
 record-facts-ripple) and two configurable guards (banned-patterns, surface-ripple)
 that stay inert until you point them at your project. Full reference:
-[docs/rules.md](docs/rules.md).
+[docs/rules/README.md](docs/rules/README.md).
 
 Add a rule with the `/rule` command: it assigns the next number, appends a row
 here, and scaffolds the enforcing check under `scripts/rules/` so the rule cannot
@@ -63,15 +63,20 @@ drift into advice.
 <project>/
 ├── CLAUDE.md                ← this file (always loaded)
 ├── HANDOFF.md               ← updated before /compact, read after
-├── .claude/                 ← rules, agents, commands (from the kit)
+├── .claude/rules/           ← how the AI agent APPLIES the rules (auto-loaded)
 ├── docs/
 │   ├── SPEC-SYSTEM.md       ← how a spec becomes its tests
 │   ├── requirements.md      ← the ledger (single source of truth)
+│   ├── rules/               ← what the rules ARE (the audit page, for humans)
 │   ├── specs/NNN-name/      ← spec.md, plan.md, tasks.md, tests.md per feature
 │   └── decisions/           ← ADRs
-├── scripts/                 ← audit-rules.mjs + checkers (from the kit)
+├── scripts/rules/           ← how the rules are ENFORCED (the checkers)
 └── <your source dirs>
 ```
+
+> The three `rules` folders do not overlap: `docs/rules/` is what the rules
+> **are**, `.claude/rules/` is how the agent **applies** them, `scripts/rules/`
+> is how they are **enforced**.
 
 ## Session protocol
 

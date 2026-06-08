@@ -1,5 +1,12 @@
 # 0002 - CSV export defuses spreadsheet formula injection
 
+> **Relates to R8** (acceptance criteria are tested): the security invariant
+> recorded below is locked by criterion C4's test
+> (`SPEC-000/C4/sec/formula-escape` in
+> [the worked example's tests.md](../specs/000-example-feature/tests.md)), so it
+> cannot regress. See the [rules index](../rules/README.md). This banner itself
+> is the doc -> rule reverse-lookup convention the rules index documents.
+>
 > Teaching artifact shipped with the kit, paired with the
 > `000-example-feature` worked example. It shows what an ADR recorded from a
 > feature's "Facts to Record" step looks like. Delete it with the rest of the
