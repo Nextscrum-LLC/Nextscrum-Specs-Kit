@@ -149,6 +149,42 @@ coverage gate enforces. Delete this folder once your team has read it.
       → it cannot reach `done` until Verified by reaches NextScrum-manual (the done-gate).
 ```
 
+## 7. The same loop on a real SaaS (a concrete picture)
+
+The command list above is the shape. Here is what it looks like with a real
+product behind it, so the steps are not abstract. Say you are building
+**Deskline**, a small support help desk: companies sign up, their customers file
+tickets, their agents reply. (The full two-feature version of this walk is in
+`README.md` under "A worked example"; this is the short form.)
+
+**First, the one rule the product cannot live without.** Deskline is
+multi-tenant: many companies share one database and must never see each other's
+tickets. That is a law, not a feature, so you lock it before any code. Run
+`/rule` and describe it ("every database read or write is scoped to the current
+tenant"). It becomes R9, gets a row in `CLAUDE.md`, and gets a check under
+`scripts/rules/` that flags any query missing a `tenant_id` filter. From now on,
+an unscoped query fails `npm run audit:rules` before it can land.
+
+**Then the first feature, "a customer files a ticket."** Run `/feature
+file-a-ticket`, write the spec with EARS criteria (WHEN a signed-in customer
+submits a subject and a message THE SYSTEM SHALL save the ticket against their
+tenant and return its id), and `/tasks` splits it across three systems, each with
+its own gate:
+
+| Task | System it touches | Review marker | Agent that checks it |
+|---|---|---|---|
+| T1 | Database (the `tickets` table + `tenant_id` index) | `[db-reviewer-ok]` | db-reviewer |
+| T2 | Backend (`POST /tickets`, scoped to the tenant) | `[chain-tracer-ok]` | chain-tracer |
+| T3 | UI (the form, wired to the route, with a busy state) | `[chain-tracer-ok]` | chain-tracer |
+
+Now run the same seven steps from section 6 against each task. When you commit
+the migration, the commit-msg hook sees a database file and refuses the commit
+until the message carries `[db-reviewer-ok]`; the route commit needs
+`[chain-tracer-ok]` the same way; and the R9 check runs every time, so the moment
+T2 forgets the tenant filter the gate stops it. One ask became a spec, the spec
+became tasks that each land on a different system, and a cross-cutting concern
+became a numbered rule with a script behind it. That is the whole kit in motion.
+
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
@@ -173,7 +209,7 @@ it. That is the entire point of the kit.
 
 ## Where to go next
 
-- `README.md` - the daily loop, the re-skin map, and the three project scenarios.
+- `README.md` - the daily loop, the re-skin map, the full Deskline worked example, and the three project scenarios.
 - `docs/SPEC-SYSTEM.md` - the full lifecycle and why it is shaped this way.
 - `docs/TESTING-SYSTEM.md` - how a spec becomes its tests.
 - `RESKIN.md` - the adaptation checklist, any time you fork the kit again.

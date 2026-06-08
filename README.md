@@ -24,7 +24,7 @@ The rest of this file is the reference.
 
 ```
 nextscrum-specs-kit/
-├── README.md                  ← you are here (overview + how-to + scenarios)
+├── README.md                  ← you are here (overview + how-to + worked example + scenarios)
 ├── CLAUDE.md                  ← the project brain template (Claude Code loads this first)
 ├── RESKIN.md                  ← paste into a fresh Claude session to adapt the kit to a stack
 ├── package.json               ← wires `npm run audit:rules` + husky
@@ -105,7 +105,114 @@ ledger entry → done            → blocked until verification reaches NextScru
 
 You never have to remember the discipline. The tools enforce it.
 
+## A worked example: a SaaS, feature by feature
+
+The scenarios further down show the kit re-skinned for different *shapes* of
+project. This section is the opposite: one project, followed closely, so you can
+watch a single idea travel through every stage and land as code with tests and a
+paper trail.
+
+The product: **Deskline**, a small support help desk. A company signs up, its
+customers file support tickets, and its agents reply. We will ship two features
+and watch the kit turn each one into specs, tasks, rules, and the checks that
+hold them in place.
+
+### Step 0: the one rule this product cannot live without
+
+Deskline is multi-tenant: many companies share one database, and Company A must
+never see Company B's tickets. That is not a feature, it is a law. So before any
+feature, you lock it as a rule.
+
+Run `/rule` and describe it: "every database read or write is scoped to the
+current tenant." The command assigns the next free number (R9, since the kit
+ships R1 through R8), adds a row to the rules table in `CLAUDE.md`, and scaffolds
+a check under `scripts/rules/` that flags any query missing a `tenant_id` filter.
+Now the rule is enforced, not remembered: a commit that adds an unscoped query
+fails `npm run audit:rules` before it can land.
+
+> Touches: `CLAUDE.md` (the rule row), a new check under `scripts/rules/`, and
+> from now on every commit (the gate runs the check).
+
+### Step 1: feature one, "a customer files a ticket"
+
+The ask, in plain words: a signed-in customer types a subject and a message, hits
+Submit, and the ticket is saved and appears in their list.
+
+**Specify.** Run `/spec file-a-ticket`. Because this touches three layers (a form,
+a backend route, and the database), the three-question test says it earns a
+folder: `docs/specs/001-file-a-ticket/`. You write `spec.md` with the *what + why*
+and the acceptance criteria as EARS sentences:
+
+- WHEN a signed-in customer submits a subject and a message THE SYSTEM SHALL save
+  the ticket against their tenant and return its id.
+- IF the subject is empty THEN THE SYSTEM SHALL reject the request and SHALL NOT
+  write a row.
+- WHILE the save is in flight THE SYSTEM SHALL disable Submit and show a busy state.
+
+Under "Rules touched" you list R9 (tenant scope) and the voice rules (R1-R2) for
+the button and toast copy.
+
+**Plan and tasks.** `/plan` writes the contract (the request shape, the `tickets`
+table columns, the route signature). `/tasks` breaks it into work units, and this
+is where you see one feature land on three different systems:
+
+| Task | System it touches | What it is | Review marker | Agent that checks it |
+|---|---|---|---|---|
+| T1 | Database | migration: `tickets` table with a `tenant_id` column and an index on it | `[db-reviewer-ok]` | db-reviewer |
+| T2 | Backend | `POST /tickets`: validate input, scope the insert to the tenant, return the id | `[chain-tracer-ok]` | chain-tracer |
+| T3 | UI | the ticket form wired to the route, with the busy state | `[chain-tracer-ok]` | chain-tracer |
+
+Each task names the EARS criterion it satisfies, so there are no orphan tasks.
+Build order follows the dependency: the table first (T1), then the route that
+writes to it (T2), then the form that calls the route (T3).
+
+**Analyze, then build.** `/analyze` reads spec, plan, and tasks together and
+confirms every criterion has a contract and a test, and that nothing breaks R9.
+Then you build each task as one commit. When you stage the migration, the
+commit-msg hook sees a database file and refuses the commit until the message
+carries `[db-reviewer-ok]`, which you add after running the db-reviewer agent.
+The route commit needs `[chain-tracer-ok]` the same way. The new R9 check runs on
+every one of these commits, so the moment T2's insert forgets the tenant filter,
+the gate stops it.
+
+### Step 2: feature two, "an agent replies and the customer is emailed"
+
+The ask: an agent opens a ticket, writes a reply, and the customer receives that
+reply by email.
+
+This one depends on feature one (no reply without a ticket), so its `spec.md`
+records **depends-on: SPEC-001**. The done-gate will not let SPEC-002 reach `done`
+while SPEC-001 is still open, and the cycle check rejects the relationship if you
+ever point two specs at each other by mistake.
+
+It also brings a new kind of risk: the app now sends email to an address pulled
+from the database, and the reply body is user-typed text going out under your
+domain. The kit's answer to a new concern is always the same: make it a rule or a
+test, not a hope.
+
+- The outbound address is data, so the route validates it and the send goes
+  through one audited path (the security baseline in `engineering.md` already
+  names this pattern; you point it at your mailer).
+- If your product had no rule against one tenant's reply reaching another tenant's
+  thread, you would add one now with `/rule`, exactly as in Step 0.
+
+The tasks again split by system: a backend task for the reply route and the
+mailer call (chain-tracer marker), a database task if the reply needs its own
+table (db-reviewer marker), and a UI task for the reply box. Each carries the
+criterion it satisfies and the marker its file pattern demands.
+
+### What the example shows
+
+One ask becomes a spec; one spec becomes tasks that each land on a different
+system; each system has a check that fires automatically at commit time; and a
+concern that crosses features (tenant isolation, safe email) becomes a numbered
+rule with a script behind it rather than a note someone has to remember. You
+describe the *what*, and the rails make sure the *how* cannot skip a step.
+
 ## Example scenarios
+
+The worked example above followed one project end to end. These three show the
+same kit bent to different project shapes, and what changes in the re-skin.
 
 ### Scenario A: a greenfield service
 
