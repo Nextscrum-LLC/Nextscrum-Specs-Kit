@@ -11,6 +11,7 @@
   - [Quality budgets](/docs/quality-budgets.md)
 
 - Reference
+  - [Rules and checks](/docs/rules.md)
   - [Comparison vs other systems](/docs/COMPARISON.md)
   - [Requirements ledger](/docs/requirements.md)
   - [Decisions (ADRs)](/docs/decisions/README.md)

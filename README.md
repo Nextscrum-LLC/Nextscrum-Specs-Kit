@@ -3,6 +3,8 @@
 [![CI](https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
+![The NextScrum Specs Kit documentation site](assets/site-preview.png)
+
 A forkable, stack-neutral engineering operating system: spec-driven development,
 machine-enforced discipline, and a set of Claude Code dev-workflow agents. Fork
 it once per project, re-skin the stack-specific bits, and every project runs on

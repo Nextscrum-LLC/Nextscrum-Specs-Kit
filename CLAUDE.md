@@ -46,6 +46,13 @@ one names what enforces it.
 | R8 | **Acceptance criteria are tested:** every EARS criterion is referenced by a test. | `scripts/rules/25-test-coverage.mjs` |
 | R9+ | *Your project rules continue here.* | the check you pin for each |
 
+All R1-R8 are **script-enforced** (mechanical). A rule with no machine check is a
+**convention** (trust plus review); prefer a script when you add one. The audit
+also runs warn-only auxiliary checks (doc-orphans, spec-change-ripple,
+record-facts-ripple) and two configurable guards (banned-patterns, surface-ripple)
+that stay inert until you point them at your project. Full reference:
+[docs/rules.md](docs/rules.md).
+
 Add a rule with the `/rule` command: it assigns the next number, appends a row
 here, and scaffolds the enforcing check under `scripts/rules/` so the rule cannot
 drift into advice.

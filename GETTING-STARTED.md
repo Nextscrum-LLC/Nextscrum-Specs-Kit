@@ -81,6 +81,10 @@ ok  R7 spec-refs: all SPEC-NNN references resolve (1 entries)
 ok  R7 spec-refs: no depends-on cycles
 ok  R7 spec-refs: all Facts-to-Record targets exist
 ok  R8 test-coverage: every spec folder's criteria are referenced in tests.md
+ok  spec-change-ripple: no staged changes, nothing to check
+ok  record-facts-ripple: no staged changes, nothing to check
+ok  banned-patterns: no patterns configured, nothing to check
+ok  surface-ripple: no surfaces configured, nothing to check
 audit:rules - all checks passed.
 ```
 

@@ -423,6 +423,10 @@ product verified by hand).
    reality.
 6. Verify and close.
 
+The `spec-change-ripple` check enforces step 1 mechanically: editing a spec's
+`spec.md` without also updating its `tasks.md` and `tests.md` warns, so the
+ripple cannot be skipped silently.
+
 ### D. A pure decision (no feature) is made
 
 1. Write or update an ADR in `docs/decisions/` directly. A decision with no
@@ -457,6 +461,11 @@ hooks):**
   time.
 - The voice rules (R1-R2: no em dashes, no banned words) and the no-AI-
   attribution rule (R3) on shipping docs and commit messages.
+- The spec-change ripple (warns): editing a spec's `spec.md` without updating
+  its `tasks.md` and `tests.md` cannot leave the work-breakdown or tests stale.
+- The record-facts ripple (warns): completing a spec without touching the
+  architecture docs its `plan.md` lists surfaces the gap (the git-aware
+  complement to the static facts-to-record existence check).
 
 **Team discipline (run as practice, not blocked by a gate):**
 

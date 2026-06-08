@@ -5,8 +5,8 @@ The NextScrum Specs Kit is maintained by NextScrum LLC. Thanks for your interest
 ## Issues and feedback: welcome
 
 Bug reports, questions, and ideas are genuinely useful. Open a GitHub issue with
-a minimal reproduction and what you expected. For security concerns, please
-disclose privately rather than in a public issue.
+a minimal reproduction and what you expected. For security concerns, see
+[SECURITY.md](SECURITY.md) and disclose privately rather than in a public issue.
 
 ## Pull requests: not at this time
 

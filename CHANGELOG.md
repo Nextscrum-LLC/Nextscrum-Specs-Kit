@@ -6,6 +6,25 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0]
+
+### Added
+
+- `spec-change-ripple` check: warns when a commit edits a spec's `spec.md`
+  without updating its `tasks.md` and `tests.md`, so a requirement change cannot
+  leave its work-breakdown and tests stale.
+- `record-facts-ripple` check: warns when a spec is completed without updating
+  the architecture docs its `plan.md` lists under "Facts to Record" (the
+  git-aware complement to the static `spec-refs` check).
+- `banned-patterns` guard: a configurable engine that scans chosen globs for
+  forbidden code patterns, with an auditable opt-out. Inert until configured.
+- `surface-ripple` guard: a configurable engine that requires a safety or
+  decision doc to be updated whenever a sensitive surface is touched. Inert
+  until configured.
+- `docs/rules.md`: a single Rules reference page (every rule and check, and what
+  enforces it), linked from the docs site.
+- Rules index now marks each rule as script-enforced or convention.
+
 ## [0.1.0]
 
 Initial public release.
