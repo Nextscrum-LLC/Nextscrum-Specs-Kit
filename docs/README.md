@@ -38,6 +38,9 @@ Where everything lives, so you do not have to grep.
 - `sessions/` - one log per working session. Handoff discipline.
 - `post-mortems/` - when something breaks, the template captures cause and the
   rule change that prevents a repeat. See [post-mortems/README.md](post-mortems/README.md).
+- `platform-limitations/` - confirmed hard limits in third-party platforms
+  (PL-NNN), recorded under R10 with primary sources and a re-verify date. See
+  [platform-limitations/README.md](platform-limitations/README.md).
 
 ## Dev-workflow agents
 

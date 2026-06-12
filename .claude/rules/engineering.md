@@ -45,6 +45,52 @@
 - **Test seams are explicit.** Functions like `_internal_clearCache()` are exposed only for tests.
 - **Helpers prefer pure functions.** A formatter takes a row in and returns a string. No side effects. Easy to test.
 
+## External-system grounding (R9)
+
+**The rule:** never describe how a third-party system behaves from training memory. Memory of an external API is a point-in-time snapshot that goes stale; the behavior may have changed, and the exact edge you care about is often under-specified or a known bug. Ground every external-behavior claim before you state it, in design, in review, and in debugging.
+
+**The drill:**
+
+1. **Read the current official docs.** Fetch the authoritative reference for the exact API or option in question and quote the relevant line.
+2. **Search prior art.** Search the symptom plus the API name. Read the closest matches: official issue trackers first, then vendor Q&A, then community posts. Someone has usually hit it and posted a fix or a confirmed "known limitation."
+3. **State confirmed vs under-specified.** Separate what the docs guarantee from what they leave open. If the docs are silent on the exact behavior, say so; do not fill the gap with a confident guess.
+4. **Test empirically when docs are silent.** When the behavior is under-specified or version-dependent, run the minimal runtime check on the target build rather than asserting. A 90-second observation beats a plausible-sounding theory.
+5. **Cite sources.** Any decision or root cause that rests on external behavior names the doc or issue it rests on, so the next session can re-check it.
+6. **Prefer testable architectures.** When an external API's lifecycle is finicky, prefer a design that keeps the correctness decision in your own code (a round-trip you can unit-test) over one that leans on the platform's implicit, undocumented behavior.
+
+**How it is enforced:** convention, backed by the `code-reviewer` agent. There is no greppable signal for "did you check the docs," but a review can ask "where is the source for this external-behavior claim?" When grounding confirms a hard upstream limitation, record it under R10.
+
+## Platform-limitation registry (R10)
+
+R9 is the discipline (always check docs plus prior art); **R10 is the memory of what that discipline found.** When grounding (R9) confirms a *hard limitation in a third-party platform* (the upstream API genuinely cannot do what you wanted, not a bug in your code), record it once so the next session does not re-derive it from zero.
+
+**Where it lives:** `docs/platform-limitations/` is a `README.md` index (the list, the bar, the template, and the procedure) plus one `PL-NNN-<title>.md` detail doc per limitation.
+
+**The three-part bar (all must hold):** (1) the root cause is upstream, not yours; (2) it is confirmed against primary sources per R9 (official docs plus at least one issue tracker or vendor acknowledgement); (3) it cost real time or constrains a design. A bug in your own code is not a PL record; that gets a fix plus a test plus maybe a post-mortem.
+
+**The load-bearing clause: re-verify, do not trust blindly.** A platform limitation is a point-in-time fact; platforms ship fixes. Every PL record carries a re-verify checklist and a `Last verified` date. Before you rely on a record to make a decision, re-check its sources; if it was fixed upstream, mark it `fixed-upstream`, note the version, and open follow-up work to simplify the workaround.
+
+**One source of truth per concept.** The PL record holds the *limitation*; an ADR holds the *decision* about how to live with it; the rule lives in `CLAUDE.md`. The PL is the hub that links them.
+
+**How it is enforced:** convention plus `scripts/rules/27-platform-limitation-refs.mjs` (warn), which flags any `PL-NNN` reference that does not resolve to a file and any detail doc missing from the index.
+
+## Boundary-case-first coding (R11)
+
+Handle the edge cases **as you write the code**, in the same pass, not as a later cleanup or a thing the reviewer is expected to catch. By the time a function is written, its boundary behavior should already be decided and coded.
+
+**The checklist to run for every function or handler you write** (the ones that apply):
+
+- **Empty / null / missing inputs.** `null`, `undefined`, `[]`, `""`, absent fields, a shape that is one of two valid forms. What renders, returns, or happens?
+- **Not-found and error paths.** The not-found / no-row / fetch-failed / rejected-promise branch. Never let it throw unhandled or render a half-state.
+- **Limits and counts.** 0, 1, many, the max (page caps, list caps, pagination); off-by-one on indices.
+- **Races and stale state.** Two events for the same target; a slow response that resolves after the user moved on; a value captured once that can go stale; timer and subscription cleanup (no leaks).
+- **Idempotency.** Calling it twice does not double-write, double-charge, or double-fire.
+- **Untrusted data.** Server, model, or third-party text goes through a safe sink (`textContent` / `createElement` / sanitization), never a raw markup sink.
+
+**Make it visible.** In the `plan.md` for a change, list the boundary cases the code handles (a short bullet list per task is enough). When a boundary case is genuinely impossible, say why. This is the same discipline the adversarial review applies from the outside; R11 says do it from the inside first so the review finds nothing.
+
+**How it is enforced:** convention plus `scripts/rules/28-boundary-cases.mjs` (warn), which flags a staged `plan.md` that has no "Boundary cases" section.
+
 ## Commenting standards
 
 - **Top of every file:** copyright header + one or two sentences explaining what this module does and why it exists.

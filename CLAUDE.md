@@ -29,10 +29,11 @@ makes it different. Keep it honest and specific.>
 
 ## Rules index (the audit page - if a rule is not here, it is not locked)
 
-Every rule lives in one numbered sequence. R1-R8 are the kit's core rules,
-enforced by `npm run audit:rules` and the husky hooks. A fork adds its own rules
-by continuing from R9. A rule that is not machine-checked is not locked, so each
-one names what enforces it.
+Every rule lives in one numbered sequence. R1-R8 are the kit's mechanical core
+(each fully script-enforced by `npm run audit:rules` and the husky hooks). R9-R11
+are engineering-discipline rules (behavioral: two backed by warn-checks, one by
+the `code-reviewer` agent). A fork adds its own rules by continuing from R12. A
+rule that is not machine-checked is not locked, so each one names what enforces it.
 
 | # | Rule | Enforced by |
 |---|---|---|
@@ -44,13 +45,19 @@ one names what enforces it.
 | R6 | **Done-gate:** no ledger entry reaches `done` below `NextScrum-manual`. | `scripts/check-ledger-done-gate.mjs` |
 | R7 | **Spec references resolve:** no dangling links, no dependency cycles, facts-to-record targets exist. | `scripts/rules/23-spec-refs.mjs` |
 | R8 | **Acceptance criteria are tested:** every EARS criterion is referenced by a test. | `scripts/rules/25-test-coverage.mjs` |
-| R9+ | *Your project rules continue here.* | the check you pin for each |
+| R9 | **External-system grounding:** never state third-party API behavior from memory; check current docs plus prior art and cite the source. | convention + `code-reviewer` agent |
+| R10 | **Platform-limitation registry:** confirmed upstream limitations recorded under `docs/platform-limitations/` (PL-NNN) with a re-verify date. | `scripts/rules/27-platform-limitation-refs.mjs` (warn) + convention |
+| R11 | **Boundary-case-first coding:** handle empty / error / limit / race / idempotency / untrusted cases in the same pass; list them in `plan.md`. | `scripts/rules/28-boundary-cases.mjs` (warn) + convention |
+| R12+ | *Your project rules continue here.* | the check you pin for each |
 
-All R1-R8 are **script-enforced** (mechanical). A rule with no machine check is a
-**convention** (trust plus review); prefer a script when you add one. The audit
-also runs warn-only auxiliary checks (doc-orphans, spec-change-ripple,
-record-facts-ripple) and two configurable guards (banned-patterns, surface-ripple)
-that stay inert until you point them at your project. Full reference:
+R1-R8 are **script-enforced** (mechanical, blocking). R9-R11 are **engineering
+disciplines**: behavioral rules the kit still pins to a check where it can (R10
+and R11 each carry a warn-check; R9 is carried by the `code-reviewer` agent). A
+rule with no machine check is a **convention** (trust plus review); prefer a
+script when you add one. The audit also runs warn-only auxiliary checks
+(doc-orphans, spec-change-ripple, record-facts-ripple, plus the R10/R11 discipline
+checks) and two configurable guards (banned-patterns, surface-ripple) that stay
+inert until you point them at your project. Full reference:
 [docs/rules/README.md](docs/rules/README.md).
 
 Add a rule with the `/rule` command: it assigns the next number, appends a row

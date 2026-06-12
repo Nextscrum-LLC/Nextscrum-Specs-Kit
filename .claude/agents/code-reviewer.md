@@ -136,6 +136,20 @@ If a change has no test, BLOCK unless explicitly trivial.
 - If the test count changed, is the HANDOFF "Tests" line updated?
 - If a queued ask just got done, was it moved out of "Next session pickup"?
 
+### 11. Engineering disciplines (R9, R11)
+
+- **External-system grounding (R9):** any claim about how a third-party API,
+  runtime, or service behaves names a source (a doc line or issue link), or is
+  flagged "from memory, unverified". Ask "where is the source for this?" on any
+  confident assertion about external behavior. If grounding surfaced a hard
+  upstream limit, is it recorded as a `PL-NNN` under `docs/platform-limitations/`
+  (R10)?
+- **Boundary-case-first (R11):** for each non-trivial function or handler in the
+  diff, the boundary cases are handled in the same code: empty / null / missing
+  inputs, not-found and error paths, limits and counts (0 / 1 / many / off-by-one),
+  races and stale state, idempotency, and untrusted-data sinks. For a folder spec,
+  the `plan.md` carries a "Boundary cases" list. Flag any obvious unhandled edge.
+
 ## Output format
 
 ```

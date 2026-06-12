@@ -79,6 +79,20 @@ idle  ->  busy  ->  idle
 - C5 -> unit: button moves idle -> busy -> idle; end-to-end: button is
   disabled and `aria-busy` during the export (accessibility floor).
 
+## Boundary cases (R11, handled in the same pass)
+
+- **Empty:** a zero-row report yields the header row only (C3), not an error and
+  not an empty body.
+- **Untrusted input:** a `reportId` containing a path-traversal sequence is
+  rejected by the allowlist before any query runs (C2); a cell beginning with
+  `=`, `+`, `-`, or `@` is neutralized before CSV quoting (C4).
+- **Limits:** a large report streams row by row rather than buffering the whole
+  body in memory (see Approach).
+- **Race / stale state:** a second Export click while `busy` is a no-op (the
+  button is disabled during the export, C5), so one export cannot fire twice.
+- **Not impossible here:** there is no pagination and no idempotency key, because
+  the endpoint is a pure read; nothing is written.
+
 ## Analyze notes (read-only check before code)
 
 - Does the plan satisfy every acceptance criterion? Yes (C1..C5 mapped

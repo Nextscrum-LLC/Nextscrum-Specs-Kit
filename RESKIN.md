@@ -63,9 +63,10 @@ database, test runner), the repositories involved, and anything already decided.
    and reliability budgets.
 
 8. **Fill in CLAUDE.md**: the project description and the locked decisions. Keep
-   the kit's core rules (R1-R8) in the rules index; add your own rules by
-   continuing the sequence from R9 (the `/rule` command scaffolds each one). For
-   every rule, pin a check in `scripts/rules/` so it cannot drift.
+   the kit's rules (R1-R8 mechanical core, R9-R11 engineering disciplines) in the
+   rules index; add your own rules by continuing the sequence from R12 (the
+   `/rule` command scaffolds each one). For every rule, pin a check in
+   `scripts/rules/` so it cannot drift.
 
 9. **Empty the ledger** (`docs/requirements.md`): delete the SPEC-000 example
    entry, keep the schema, the verification-level legend, and the field

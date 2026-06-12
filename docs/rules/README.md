@@ -18,8 +18,8 @@ here and in `CLAUDE.md`, and scaffolds the enforcing check.
 ## Core rules (R1-R8)
 
 These are the kit's locked rules. All are **script-enforced** (mechanical), run
-by `npm run audit:rules` and the husky hooks. A fork continues the sequence from
-R9 for its own rules.
+by `npm run audit:rules` and the husky hooks. The engineering-discipline rules
+R9-R11 follow below; a fork continues the sequence from R12 for its own rules.
 
 | # | Rule | Type | Enforced by |
 |---|---|---|---|
@@ -33,9 +33,31 @@ R9 for its own rules.
 | R8 | Acceptance criteria are tested | script | `scripts/rules/25-test-coverage.mjs` |
 
 > Type tells you whether a rule is **script** (mechanical, cannot drift) or
-> **convention** (relies on a human running it). The kit ships only script rules.
-> When you add a rule, prefer a script so it stays locked; if a rule is genuinely
-> behavioral and cannot be checked, mark it `convention` so the gap is visible.
+> **convention** (relies on a human running it). R1-R8 are all script rules; the
+> engineering disciplines below (R9-R11) are the kit's only behavioral rules, and
+> even those are pinned to a check where one is possible. When you add a rule,
+> prefer a script so it stays locked; if a rule is genuinely behavioral and cannot
+> be checked, mark it `convention` so the gap is visible.
+
+## Engineering-discipline rules (R9-R11)
+
+These are behavioral rules: how to write and reason about code, not patterns a
+regex can fully catch. They came from real forks hardening their practice, and
+they are part of the kit's core. The kit still pins each to a check where it can,
+so the discipline is surfaced and not just remembered.
+
+| # | Rule | Type | Enforced by |
+|---|---|---|---|
+| R9 | External-system grounding: never describe a third-party API's behavior from memory; read current docs plus prior art, separate confirmed from under-specified, and cite the source | convention | the `code-reviewer` agent asks "where is the source for this external-behavior claim?" |
+| R10 | Platform-limitation registry: a confirmed *upstream* limitation is recorded once under `docs/platform-limitations/` (PL-NNN) with primary sources and a re-verify date, so the next session does not re-derive it | convention + warn-check | `scripts/rules/27-platform-limitation-refs.mjs` flags a `PL-NNN` reference with no file, or a detail doc missing from the index |
+| R11 | Boundary-case-first coding: handle empty / not-found / limit / race / idempotency / untrusted cases in the same pass as the code, and list them in the spec's `plan.md` | convention + warn-check | `scripts/rules/28-boundary-cases.mjs` warns when a staged `plan.md` has no "Boundary cases" section |
+
+R9 and R10 work as a pair: R9 is the discipline (always ground an external claim),
+R10 is the memory of what grounding confirmed (a re-verifiable record of a hard
+upstream limit). R11 pulls edge-case handling forward into the writing pass so the
+review finds nothing left to catch. Full how-to for all three lives in
+[.claude/rules/engineering.md](../../.claude/rules/engineering.md); the registry
+itself is [docs/platform-limitations/](../platform-limitations/).
 
 ## Auxiliary checks (warn-only)
 
@@ -88,9 +110,13 @@ sentence or two; its job is the link, not the explanation.
 
 **Where it applies in the kit today.** The core rules (R1-R8) are one-line,
 script-enforced rules with no separate detail doc, so none needs a "Backs rule"
-banner yet. The worked example shows the "Relates to" shape: the example ADR
+banner. The discipline rules R9-R11 do have detail homes (the sections in
+[.claude/rules/engineering.md](../../.claude/rules/engineering.md)), and R10's
+registry [docs/platform-limitations/README.md](../platform-limitations/README.md)
+carries a "Backs rule R10" banner so the reverse lookup resolves. The worked
+example shows the "Relates to" shape: the example ADR
 [`0002-example-decision.md`](../decisions/0002-example-decision.md) carries a
 banner back to R8, because the security invariant it records is locked by a
 tested acceptance criterion. As a fork grows rules that need their own detail
-docs (continuing from R9), give each such doc a "Backs rule" banner so the
+docs (continuing from R12), give each such doc a "Backs rule" banner so the
 reverse lookup never goes stale.
