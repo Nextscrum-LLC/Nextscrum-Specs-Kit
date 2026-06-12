@@ -1,6 +1,4 @@
 {
-  "//": "Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. - Claude Code project settings.",
-  "//perm-policy": "Allow broadly for in-project actions. Deny only destructive or out-of-project operations. RESKIN: add the project's own toolchain (test runner, db client, container CLI) to the allow list.",
   "permissions": {
     "allow": [
       "Bash(npm *)",
@@ -94,7 +92,11 @@
       "PowerShell(foreach *)",
       "PowerShell(while *)",
       "PowerShell(switch *)",
-      "PowerShell([Environment]::GetEnvironmentVariable*)"
+      "PowerShell([Environment]::GetEnvironmentVariable*)",
+      "Read(/REDACTED/scripts/**)",
+      "Bash(git -C REDACTED checkout -- .claude/settings.json)",
+      "Bash(git -C REDACTED add -A)",
+      "Bash(git -C REDACTED commit -F -)"
     ],
     "deny": [
       "Bash(git push --force*)",
@@ -112,5 +114,7 @@
       "PowerShell([Environment]::SetEnvironmentVariable*Machine*)"
     ]
   },
-  "hooks": {}
+  "hooks": {},
+  "//": "Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. - Claude Code project settings.",
+  "//perm-policy": "Allow broadly for in-project actions. Deny only destructive or out-of-project operations. RESKIN: add the project's own toolchain (test runner, db client, container CLI) to the allow list."
 }

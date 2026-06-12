@@ -93,7 +93,7 @@ Handle the edge cases **as you write the code**, in the same pass, not as a late
 
 ## Commenting standards
 
-- **Top of every file:** copyright header + one or two sentences explaining what this module does and why it exists.
+- **Top of every file:** copyright header (R12, locked by `scripts/rules/29-ip-headers.mjs`; `npm run headers:fix` repairs) + one or two sentences explaining what this module does and why it exists.
 - **Function-level comments are WHY, not WHAT.** Well-named functions explain WHAT they do. Comments explain WHY a non-obvious choice was made (workaround for a library bug, link to an ADR, performance tradeoff).
 - **Inline comments only for non-obvious gotchas.** Don't narrate code that's already clear. `// increment counter` adds nothing.
 - **No "removed code" comments.** Git history is the record. Delete and move on.

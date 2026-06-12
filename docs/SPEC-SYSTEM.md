@@ -336,7 +336,7 @@ here so the whole pipeline is visible in one place:
 | Done / verify | R6, R8 | the done-gate (R6) + acceptance criteria, tested under R8 |
 | Deploy | deploy workflow (practice) | `dev` to staging, `main` to production via CI |
 
-> RESKIN: the R-numbers above mirror this kit's rule book (R1-R11 in
+> RESKIN: the R-numbers above mirror this kit's rule book (R1-R12 in
 > `CLAUDE.md`). Wire each delivery step to your own rules and CI.
 
 The two halves meet at the finish line: a spec is not `done` until QA and

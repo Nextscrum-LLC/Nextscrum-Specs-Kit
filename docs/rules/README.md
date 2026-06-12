@@ -18,8 +18,9 @@ here and in `CLAUDE.md`, and scaffolds the enforcing check.
 ## Core rules (R1-R8)
 
 These are the kit's locked rules. All are **script-enforced** (mechanical), run
-by `npm run audit:rules` and the husky hooks. The engineering-discipline rules
-R9-R11 follow below; a fork continues the sequence from R12 for its own rules.
+by `npm run audit:rules` and the husky hooks. R12 (file headers) is the same kind
+of rule and follows below; the engineering-discipline rules R9-R11 sit between
+them. A fork continues the sequence from R13 for its own rules.
 
 | # | Rule | Type | Enforced by |
 |---|---|---|---|
@@ -58,6 +59,20 @@ upstream limit). R11 pulls edge-case handling forward into the writing pass so t
 review finds nothing left to catch. Full how-to for all three lives in
 [.claude/rules/engineering.md](../../.claude/rules/engineering.md); the registry
 itself is [docs/platform-limitations/](../platform-limitations/).
+
+## File-header rule (R12)
+
+Mechanical and blocking, the same kind of rule as R1-R8. Every source file
+carries a copyright / IP header on its first lines. The kit preaches this in
+`engineering.md` "Commenting standards"; R12 locks it.
+
+| # | Rule | Type | Enforced by |
+|---|---|---|---|
+| R12 | Every source file (`.mjs` / `.cjs` / `.js` / `.ts` / `.tsx` / `.sql`) carries a `Copyright (c) <year> <OWNER>` header in its first lines | script (blocking) | `scripts/rules/29-ip-headers.mjs`; `npm run headers:fix` prepends the header to any file missing it |
+
+Prose docs (`.md`) are governed by the voice rules (R1-R2) and config files
+(`.json`) have no comment syntax, so neither is in scope. Set the owner and the
+license note at the top of `scripts/rules/29-ip-headers.mjs` (RESKIN).
 
 ## Auxiliary checks (warn-only)
 
@@ -118,5 +133,5 @@ example shows the "Relates to" shape: the example ADR
 [`0002-example-decision.md`](../decisions/0002-example-decision.md) carries a
 banner back to R8, because the security invariant it records is locked by a
 tested acceptance criterion. As a fork grows rules that need their own detail
-docs (continuing from R12), give each such doc a "Backs rule" banner so the
+docs (continuing from R13), give each such doc a "Backs rule" banner so the
 reverse lookup never goes stale.

@@ -29,11 +29,12 @@ makes it different. Keep it honest and specific.>
 
 ## Rules index (the audit page - if a rule is not here, it is not locked)
 
-Every rule lives in one numbered sequence. R1-R8 are the kit's mechanical core
-(each fully script-enforced by `npm run audit:rules` and the husky hooks). R9-R11
-are engineering-discipline rules (behavioral: two backed by warn-checks, one by
-the `code-reviewer` agent). A fork adds its own rules by continuing from R12. A
-rule that is not machine-checked is not locked, so each one names what enforces it.
+Every rule lives in one numbered sequence. R1-R8 and R12 are the kit's mechanical
+core (script-enforced and blocking via `npm run audit:rules` and the husky hooks).
+R9-R11 are engineering-discipline rules (behavioral: two backed by warn-checks,
+one by the `code-reviewer` agent). A fork adds its own rules by continuing from
+R13. A rule that is not machine-checked is not locked, so each one names what
+enforces it.
 
 | # | Rule | Enforced by |
 |---|---|---|
@@ -48,13 +49,14 @@ rule that is not machine-checked is not locked, so each one names what enforces 
 | R9 | **External-system grounding:** never state third-party API behavior from memory; check current docs plus prior art and cite the source. | convention + `code-reviewer` agent |
 | R10 | **Platform-limitation registry:** confirmed upstream limitations recorded under `docs/platform-limitations/` (PL-NNN) with a re-verify date. | `scripts/rules/27-platform-limitation-refs.mjs` (warn) + convention |
 | R11 | **Boundary-case-first coding:** handle empty / error / limit / race / idempotency / untrusted cases in the same pass; list them in `plan.md`. | `scripts/rules/28-boundary-cases.mjs` (warn) + convention |
-| R12+ | *Your project rules continue here.* | the check you pin for each |
+| R12 | **File headers:** every source file carries the copyright / IP header. | `scripts/rules/29-ip-headers.mjs` (`npm run headers:fix` to repair) |
+| R13+ | *Your project rules continue here.* | the check you pin for each |
 
-R1-R8 are **script-enforced** (mechanical, blocking). R9-R11 are **engineering
-disciplines**: behavioral rules the kit still pins to a check where it can (R10
-and R11 each carry a warn-check; R9 is carried by the `code-reviewer` agent). A
-rule with no machine check is a **convention** (trust plus review); prefer a
-script when you add one. The audit also runs warn-only auxiliary checks
+R1-R8 and R12 are **script-enforced** (mechanical, blocking). R9-R11 are
+**engineering disciplines**: behavioral rules the kit still pins to a check where
+it can (R10 and R11 each carry a warn-check; R9 is carried by the `code-reviewer`
+agent). A rule with no machine check is a **convention** (trust plus review);
+prefer a script when you add one. The audit also runs warn-only auxiliary checks
 (doc-orphans, spec-change-ripple, record-facts-ripple, plus the R10/R11 discipline
 checks) and two configurable guards (banned-patterns, surface-ripple) that stay
 inert until you point them at your project. Full reference:
@@ -69,6 +71,7 @@ drift into advice.
 ```
 <project>/
 ├── CLAUDE.md                ← this file (always loaded)
+├── AGENTS.md                ← cross-tool entry (Cursor, Codex, etc.); points back here
 ├── HANDOFF.md               ← updated before /compact, read after
 ├── .claude/rules/           ← how the AI agent APPLIES the rules (auto-loaded)
 ├── docs/

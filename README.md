@@ -26,6 +26,7 @@ The rest of this file is the reference.
 nextscrum-specs-kit/
 ├── README.md                  ← you are here (overview + how-to + worked example + scenarios)
 ├── CLAUDE.md                  ← the project brain template (Claude Code loads this first)
+├── AGENTS.md                  ← cross-tool entry (Cursor, Codex, Continue); points back to CLAUDE.md
 ├── RESKIN.md                  ← paste into a fresh Claude session to adapt the kit to a stack
 ├── package.json               ← wires `npm run audit:rules` + husky
 ├── .husky/                    ← pre-commit / commit-msg / pre-push enforcement
@@ -124,8 +125,8 @@ never see Company B's tickets. That is not a feature, it is a law. So before any
 feature, you lock it as a rule.
 
 Run `/rule` and describe it: "every database read or write is scoped to the
-current tenant." The command assigns the next free number (R12, since the kit
-ships R1 through R11), adds a row to the rules table in `CLAUDE.md`, and scaffolds
+current tenant." The command assigns the next free number (R13, since the kit
+ships R1 through R12), adds a row to the rules table in `CLAUDE.md`, and scaffolds
 a check under `scripts/rules/` that flags any query missing a `tenant_id` filter.
 Now the rule is enforced, not remembered: a commit that adds an unscoped query
 fails `npm run audit:rules` before it can land.
