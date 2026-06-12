@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # CLAUDE.md - <PROJECT>
 
 > Loaded automatically by Claude Code at the start of every session. Keep concise.
@@ -49,7 +51,7 @@ enforces it.
 | R9 | **External-system grounding:** never state third-party API behavior from memory; check current docs plus prior art and cite the source. | convention + `code-reviewer` agent |
 | R10 | **Platform-limitation registry:** confirmed upstream limitations recorded under `docs/platform-limitations/` (PL-NNN) with a re-verify date. | `scripts/rules/27-platform-limitation-refs.mjs` (warn) + convention |
 | R11 | **Boundary-case-first coding:** handle empty / error / limit / race / idempotency / untrusted cases in the same pass; list them in `plan.md`. | `scripts/rules/28-boundary-cases.mjs` (warn) + convention |
-| R12 | **File headers:** every source file carries the copyright / IP header. | `scripts/rules/29-ip-headers.mjs` (`npm run headers:fix` to repair) |
+| R12 | **File headers:** every source and docs file carries the copyright / IP header. | `scripts/rules/29-ip-headers.mjs` (`npm run headers:fix` to repair) |
 | R13+ | *Your project rules continue here.* | the check you pin for each |
 
 R1-R8 and R12 are **script-enforced** (mechanical, blocking). R9-R11 are

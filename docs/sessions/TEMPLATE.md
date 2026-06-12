@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # Session <YYYY-MM-DD-NN> - <short title>
 
 ## Goal

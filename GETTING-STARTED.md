@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # Getting started
 
 A literal, first-30-minutes walkthrough: from a fresh copy of the kit to your

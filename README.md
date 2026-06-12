@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # NextScrum Specs Kit
 
 [![CI](https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit/actions/workflows/ci.yml/badge.svg)](https://github.com/Nextscrum-LLC/Nextscrum-Specs-Kit/actions/workflows/ci.yml)

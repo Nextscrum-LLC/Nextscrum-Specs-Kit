@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # Glossary
 
 Project vocabulary (the domain words your team uses), kept in one place so a new

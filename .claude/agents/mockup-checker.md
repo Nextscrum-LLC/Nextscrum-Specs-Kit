@@ -4,6 +4,7 @@ description: Structural diff between a mockup HTML in mockups/ and the live UI D
 tools: Read, Grep, Glob
 model: sonnet
 ---
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
 
 # What this agent does
 

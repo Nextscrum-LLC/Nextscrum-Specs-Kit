@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # Example feature design - CSV report export
 
 > This is a teaching artifact that ships with the kit. It shows what a "Facts to

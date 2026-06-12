@@ -3,6 +3,7 @@ name: Bug report
 about: Something in the kit does not work as documented
 labels: bug
 ---
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
 
 **What happened**
 

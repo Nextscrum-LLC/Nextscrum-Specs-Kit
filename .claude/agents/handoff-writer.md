@@ -4,6 +4,7 @@ description: Updates HANDOFF.md and writes a fresh docs/sessions/YYYY-MM-DD-NN.m
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
 
 # What this agent does
 

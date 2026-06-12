@@ -13,10 +13,7 @@ Steps:
 
 1. **Auto-format** - `npm run format`
 2. **Auto-lint-fix** - `npm run lint:fix`
-3. **Add missing IP headers** - for any file flagged by `npm run headers:check`, prepend the appropriate-for-language header:
-   - `.js`/`.ts`: `// Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed.`
-   - `.sql`: `-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed.`
-   - `.md`: `<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->`
+3. **Add missing IP headers** - `npm run headers:fix` backfills the copyright header on any code or docs file missing it (R12). Run `npm run headers:check` first to see what is missing.
 4. **Dead-code report** - `npm run clean:dead` (knip or the project's dead-code tool). DON'T auto-delete; print findings and let the user confirm each removal.
 5. **Unused dependency report** - knip also flags unused npm deps. Same: print, confirm before removal.
 6. **Show the diff** - `git diff --stat` after all changes. Pause for the user to review before they commit.

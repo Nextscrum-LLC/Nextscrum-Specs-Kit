@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # Error queue
 
 A lightweight running list of known errors and rough edges that are not yet

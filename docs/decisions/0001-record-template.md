@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # 0001 - <short decision title>
 
 - **Status:** proposed | accepted | superseded by ROOT-NNNN

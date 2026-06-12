@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 <!-- Docsify cover page -->
 
 ![NextScrum](assets/logo-blue.svg ':size=300')

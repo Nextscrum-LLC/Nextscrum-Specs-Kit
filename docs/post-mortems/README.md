@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # Post-mortems
 
 When something breaks (a regression ships, a gate is bypassed, a wrong

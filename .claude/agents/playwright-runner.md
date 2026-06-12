@@ -4,6 +4,7 @@ description: Runs the E2E test suite (full or focused) and reports back. Invoke 
 tools: Bash, Read, Grep, Glob
 model: sonnet
 ---
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
 
 # What this agent does
 

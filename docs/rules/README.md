@@ -62,17 +62,17 @@ itself is [docs/platform-limitations/](../platform-limitations/).
 
 ## File-header rule (R12)
 
-Mechanical and blocking, the same kind of rule as R1-R8. Every source file
-carries a copyright / IP header on its first lines. The kit preaches this in
+Mechanical and blocking, the same kind of rule as R1-R8. Every source and docs
+file carries a copyright / IP header near the top. The kit preaches this in
 `engineering.md` "Commenting standards"; R12 locks it.
 
 | # | Rule | Type | Enforced by |
 |---|---|---|---|
-| R12 | Every source file (`.mjs` / `.cjs` / `.js` / `.ts` / `.tsx` / `.sql`) carries a `Copyright (c) <year> <OWNER>` header in its first lines | script (blocking) | `scripts/rules/29-ip-headers.mjs`; `npm run headers:fix` prepends the header to any file missing it |
+| R12 | Every code (`.mjs` / `.cjs` / `.js` / `.ts` / `.tsx` / `.sql`) and Markdown (`.md`) file carries a `Copyright (c) <year> <OWNER>` header near the top (for Markdown, just after any YAML frontmatter) | script (blocking) | `scripts/rules/29-ip-headers.mjs` (also `npm run headers:check`); `npm run headers:fix` repairs any file missing it |
 
-Prose docs (`.md`) are governed by the voice rules (R1-R2) and config files
-(`.json`) have no comment syntax, so neither is in scope. Set the owner and the
-license note at the top of `scripts/rules/29-ip-headers.mjs` (RESKIN).
+Config files (`.json`) have no comment syntax, so they are not scanned. Set the
+owner and the license note at the top of `scripts/rules/29-ip-headers.mjs`
+(RESKIN); `npm run headers:fix` backfills every file after you change them.
 
 ## Auxiliary checks (warn-only)
 

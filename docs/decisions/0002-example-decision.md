@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # 0002 - CSV export defuses spreadsheet formula injection
 
 > **Relates to R8** (acceptance criteria are tested): the security invariant

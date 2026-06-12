@@ -4,6 +4,7 @@ description: Deep review of database schema, migrations, queries, and DB access 
 tools: Read, Grep, Glob, Bash
 model: opus
 ---
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
 
 # What this agent does
 

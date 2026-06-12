@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # Architecture Decision Records (ADRs)
 
 An ADR captures one architectural decision: the context that forced it, the

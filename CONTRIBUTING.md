@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # Contributing
 
 The NextScrum Specs Kit is maintained by NextScrum LLC. Thanks for your interest.

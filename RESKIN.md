@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
+
 # Re-skin this kit
 
 Paste this whole file as your first message into a fresh Claude Code session

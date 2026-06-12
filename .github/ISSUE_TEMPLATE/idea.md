@@ -3,6 +3,7 @@ name: Idea or feedback
 about: Suggest an improvement to the methodology or the tooling
 labels: idea
 ---
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
 
 **The idea**
 

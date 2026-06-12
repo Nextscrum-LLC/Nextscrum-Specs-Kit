@@ -4,6 +4,7 @@ description: Deep semantic review of staged or committed changes. Walks all lock
 tools: Read, Grep, Glob, Bash
 model: opus
 ---
+<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->
 
 # What this agent does
 

@@ -2,17 +2,21 @@
 //
 // scripts/rules/29-ip-headers.mjs
 //
-// R12: every source file carries a copyright / IP header on its first lines.
-// The kit preaches this in engineering.md "Commenting standards"; this check
-// locks it. Scoped to code files with line-comment syntax (.mjs/.cjs/.js/.ts/
-// .tsx/.sql). Prose docs (.md) are governed by the voice rules (R1-R2), and
-// config files (.json) have no comment syntax, so neither is scanned here.
+// R12: every source and docs file carries a copyright / IP header on its first
+// lines. The kit preaches this in engineering.md "Commenting standards"; this
+// check locks it. Covered: code files with line-comment syntax (.mjs/.cjs/.js/
+// .ts/.tsx/.sql) and Markdown (.md, with an HTML-comment header). Config files
+// (.json) have no comment syntax and are not scanned.
+//
+// For Markdown with YAML frontmatter (--- ... ---), the header sits just after
+// the frontmatter block, so the check looks past it.
 //
 // Hard fail (blocking): a missing header is a one-command fix
 // (`npm run headers:fix`), so there is no reason to let it drift.
 //
 // RESKIN: set OWNER and LICENSE_NOTE to your copyright holder and license.
 //
+// Run:        node scripts/rules/29-ip-headers.mjs           (the check; npm run headers:check)
 // Self-test:  node scripts/rules/29-ip-headers.mjs --self-test
 
 import { readFileSync, readdirSync } from "node:fs";
@@ -20,13 +24,13 @@ import { join, extname, relative } from "node:path";
 import { ROOT } from "./_shared.mjs";
 
 // RESKIN: your copyright holder. The check matches
-// "Copyright (c) <20xx> <OWNER>" anywhere in a file's first 5 lines.
+// "Copyright (c) <20xx> <OWNER>" near the top of every covered file.
 export const OWNER = "NextScrum LLC";
 // RESKIN: the license note the fixer writes (the check does not require it).
 export const LICENSE_NOTE = "Apache-2.0 Licensed.";
 
-// Code extensions that must carry a line-comment header.
-export const HEADER_EXTS = new Set([".mjs", ".cjs", ".js", ".ts", ".tsx", ".sql"]);
+// Extensions that must carry a header.
+export const HEADER_EXTS = new Set([".mjs", ".cjs", ".js", ".ts", ".tsx", ".sql", ".md"]);
 
 // Directories the walk never descends into.
 export const SKIP_DIRS = new Set([
@@ -37,23 +41,35 @@ export const SKIP_DIRS = new Set([
 const ownerEscaped = OWNER.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 export const HEADER_RE = new RegExp(`Copyright \\(c\\) 20\\d\\d ${ownerEscaped}`);
 
-/** True if this filename is a code file the header rule covers. */
+/** True if this filename is a file the header rule covers. */
 export function isSource(name) {
   return HEADER_EXTS.has(extname(name));
 }
 
-/** True if the given head-of-file text carries the owner's copyright header. */
-export function hasHeader(headText) {
-  return HEADER_RE.test(headText);
+/** Drop a leading YAML frontmatter block (--- ... ---) so the header check
+ * can look at the line that follows it. Returns the remaining text. */
+export function stripFrontmatter(content) {
+  if (!content.startsWith("---\n") && !content.startsWith("---\r\n")) return content;
+  const m = content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n/);
+  return m ? content.slice(m[0].length) : content;
+}
+
+/** True if the file content carries the owner's copyright header near the top
+ * (after any frontmatter). */
+export function fileHasHeader(content) {
+  const head = stripFrontmatter(content).split("\n").slice(0, 5).join("\n");
+  return HEADER_RE.test(head);
 }
 
 /** The header line the fixer prepends, comment-styled per extension. */
 export function headerLine(ext, year) {
   const text = `Copyright (c) ${year} ${OWNER}. ${LICENSE_NOTE}`;
-  return ext === ".sql" ? `-- ${text}` : `// ${text}`;
+  if (ext === ".md") return `<!-- ${text} -->`;
+  if (ext === ".sql") return `-- ${text}`;
+  return `// ${text}`;
 }
 
-/** Collect every source file under `dir` (absolute paths), skipping SKIP_DIRS. */
+/** Collect every covered file under `dir` (absolute paths), skipping SKIP_DIRS. */
 export function collectSources(dir, out = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     if (SKIP_DIRS.has(entry.name)) continue;
@@ -64,23 +80,28 @@ export function collectSources(dir, out = []) {
   return out;
 }
 
-export default {
-  id: "ip-headers",
-  label: "R12 ip-headers: every source file carries the copyright header",
-  async run({ fail, ok }) {
-    const files = collectSources(ROOT);
-    const missing = [];
-    for (const f of files) {
-      let head;
-      try {
-        head = readFileSync(f, "utf8").split("\n").slice(0, 5).join("\n");
-      } catch {
-        continue;
-      }
-      if (!hasHeader(head)) missing.push(relative(ROOT, f).replace(/\\/g, "/"));
+/** Run the check over the repo; returns the list of files missing a header. */
+export function findMissing(rootDir = ROOT) {
+  const missing = [];
+  for (const f of collectSources(rootDir)) {
+    let content;
+    try {
+      content = readFileSync(f, "utf8");
+    } catch {
+      continue;
     }
+    if (!fileHasHeader(content)) missing.push(relative(rootDir, f).replace(/\\/g, "/"));
+  }
+  return missing;
+}
+
+const rule = {
+  id: "ip-headers",
+  label: "R12 ip-headers: every source and docs file carries the copyright header",
+  async run({ fail, ok }) {
+    const missing = findMissing();
     if (missing.length === 0) {
-      ok(`R12 ip-headers: all ${files.length} source files carry the header`);
+      ok(`R12 ip-headers: every covered file carries the "${OWNER}" header`);
       return;
     }
     for (const m of missing) {
@@ -88,6 +109,27 @@ export default {
     }
   },
 };
+
+export default rule;
+
+// ---------- CLI ----------
+
+const isMain = process.argv[1]?.endsWith("29-ip-headers.mjs");
+
+if (isMain && process.argv.includes("--self-test")) {
+  runSelfTest();
+} else if (isMain) {
+  // Standalone `npm run headers:check`: print and exit non-zero on any miss.
+  let failures = 0;
+  await rule.run({
+    fail: (m) => {
+      console.error(`x  ${m}`);
+      failures++;
+    },
+    ok: (m) => console.log(`ok  ${m}`),
+  });
+  process.exit(failures > 0 ? 1 : 0);
+}
 
 // ---------- Self-test ----------
 
@@ -109,30 +151,40 @@ function runSelfTest() {
   process.stdout.write("scripts/rules/29-ip-headers.mjs self-test\n");
 
   expect("isSource true for .mjs", isSource("foo.mjs"), true);
+  expect("isSource true for .md", isSource("README.md"), true);
   expect("isSource true for .sql", isSource("foo.sql"), true);
-  expect("isSource false for .md", isSource("README.md"), false);
   expect("isSource false for .json", isSource("package.json"), false);
   expect(
-    "hasHeader true for owner header",
-    hasHeader("// Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed.\nimport x"),
+    "fileHasHeader true for js header",
+    fileHasHeader("// Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed.\nimport x"),
     true,
   );
   expect(
-    "hasHeader false for no header",
-    hasHeader("import x from 'y';\nconst a = 1;"),
+    "fileHasHeader true for md header",
+    fileHasHeader("<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->\n\n# Title"),
+    true,
+  );
+  expect(
+    "fileHasHeader true past frontmatter",
+    fileHasHeader("---\nname: x\ndescription: y\n---\n<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->\n# Body"),
+    true,
+  );
+  expect(
+    "fileHasHeader false for no header",
+    fileHasHeader("# Title\n\nsome prose with no header"),
     false,
   );
   expect(
-    "hasHeader false for wrong owner",
-    hasHeader("// Copyright (c) 2026 Someone Else. MIT.\n"),
+    "fileHasHeader false for wrong owner",
+    fileHasHeader("<!-- Copyright (c) 2026 Someone Else. MIT. -->\n"),
     false,
   );
+  expect("stripFrontmatter removes the block", stripFrontmatter("---\na: 1\n---\nbody"), "body");
+  expect("stripFrontmatter no-op without block", stripFrontmatter("# just a doc"), "# just a doc");
   expect("headerLine js style", headerLine(".mjs", 2026), "// Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed.");
+  expect("headerLine md style", headerLine(".md", 2026), "<!-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed. -->");
   expect("headerLine sql style", headerLine(".sql", 2026), "-- Copyright (c) 2026 NextScrum LLC. Apache-2.0 Licensed.");
 
   process.stdout.write(`\nself-test: ${pass} passed, ${failc} failed\n`);
   process.exit(failc > 0 ? 3 : 0);
 }
-
-const isMain = process.argv[1]?.endsWith("29-ip-headers.mjs");
-if (isMain && process.argv.includes("--self-test")) runSelfTest();
