@@ -60,8 +60,8 @@ it can (R10 and R11 each carry a warn-check; R9 is carried by the `code-reviewer
 agent). A rule with no machine check is a **convention** (trust plus review);
 prefer a script when you add one. The audit also runs warn-only auxiliary checks
 (doc-orphans, spec-change-ripple, record-facts-ripple, plus the R10/R11 discipline
-checks) and two configurable guards (banned-patterns, surface-ripple) that stay
-inert until you point them at your project. Full reference:
+checks) and three configurable guards (banned-patterns, surface-ripple,
+version-sync) that stay inert until you point them at your project. Full reference:
 [docs/rules/README.md](docs/rules/README.md).
 
 Add a rule with the `/rule` command: it assigns the next number, appends a row

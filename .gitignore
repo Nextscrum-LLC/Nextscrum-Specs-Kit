@@ -15,3 +15,7 @@ coverage/
 # local dev artifacts
 _shot-*.png
 *.local
+
+# per-fork runtime data (agent telemetry log; schema in docs/agent-telemetry.md)
+docs/agent-telemetry.jsonl
+scripts/.self-test-telemetry.jsonl

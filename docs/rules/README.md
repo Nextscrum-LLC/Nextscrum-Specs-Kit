@@ -99,6 +99,7 @@ project-specific guards a mature codebase grows.
 |---|---|---|
 | banned-patterns | Scans chosen file globs for forbidden code patterns (with an auditable per-line opt-out), and fails on a match | `scripts/rules/40-banned-patterns.mjs` (config block at top) |
 | surface-ripple | Requires a safety or decision doc to be updated whenever a sensitive surface (a glob) is touched | `scripts/rules/41-surface-ripple.mjs` (config block at top) |
+| version-sync | Warns when source files are staged without the project's version file, a reminder to bump the version | `scripts/rules/30-version-sync.mjs` (set `VERSION_FILE` + `SOURCE_PREFIXES`) |
 
 Example uses: a WordPress fork bans unescaped output in `theme/**`; a Laravel
 fork bans `DB::raw` in `app/**`; any project requires a schema-decision doc

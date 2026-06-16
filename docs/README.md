@@ -55,3 +55,11 @@ ones you keep as is:
 
 The other four (chain-tracer, db-reviewer, playwright-runner, mockup-checker)
 are re-skinned per stack; see `.claude/rules/engineering.md`.
+
+## Tooling (optional, ships inert)
+
+- [agent-telemetry.md](agent-telemetry.md) - the schema and read-back recipes for
+  the opt-in agent-invocation log (`scripts/log-agent-invocation.mjs`), so you can
+  see how often each agent fires and whether the R5 trigger map is well-calibrated.
+- `scripts/graph.mjs` (`npm run graph`) - generates a Mermaid module-import graph
+  for a source tree. Inert until you set its `SRC_DIR_REL`.
