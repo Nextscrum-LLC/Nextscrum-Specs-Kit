@@ -1,21 +1,118 @@
-node_modules/
+# nextscrum-specs-kit default .gitignore
+#
+# A broad, multi-stack default: keep secrets, personal and editor files, OS junk,
+# and build artifacts out of git regardless of stack. RESKIN: delete the sections
+# that do not apply to this project, and add anything stack-specific.
+#
+# Note: .gitignore only stops untracked FILES from being committed. It cannot
+# scrub a secret pasted INTO a tracked file. The security baseline in
+# .claude/rules/engineering.md ("no secrets in source") and code review cover that.
+
+# --- Secrets and credentials (never commit) ---
 .env
 .env.*
 !.env.example
-*.log
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+id_rsa
+id_dsa
+id_ed25519
+credentials.json
+service-account*.json
+gha-creds-*.json
+.npmrc
+.netrc
+secrets.*
+*.secret
+# Public certificates are sometimes committed on purpose; remove the next line if so.
+*.crt
+
+# --- Local / personal tool settings ---
+.claude/settings.local.json
+docs/agent-telemetry.jsonl
+scripts/.self-test-telemetry.jsonl
+
+# --- OS junk ---
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-dist/
-build/
-coverage/
+Desktop.ini
+
+# --- Editors / IDEs ---
 .idea/
 .vscode/*
 !.vscode/extensions.json
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
 
-# local dev artifacts
-_shot-*.png
+# --- Logs and temp ---
+*.log
+logs/
+tmp/
+temp/
+.cache/
+*.tmp
+*.pid
+
+# --- Dependencies ---
+node_modules/
+.pnpm-store/
+jspm_packages/
+bower_components/
+.yarn/cache
+.yarn/unplugged
+.bundle/
+# Composer (PHP) and some Go projects commit vendor/; remove the next line if yours does.
+vendor/
+
+# --- Build / compiled output ---
+dist/
+build/
+out/
+.output/
+.next/
+.nuxt/
+.svelte-kit/
+.turbo/
+.parcel-cache/
+.vite/
+coverage/
+.nyc_output/
+target/
+obj/
+*.class
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Local artifacts ---
 *.local
-
-# per-fork runtime data (agent telemetry log; schema in docs/agent-telemetry.md)
-docs/agent-telemetry.jsonl
-scripts/.self-test-telemetry.jsonl
+_shot-*.png
+*.bak
+*.orig

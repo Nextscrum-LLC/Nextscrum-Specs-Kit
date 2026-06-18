@@ -52,7 +52,7 @@ If the main session doesn't pass these, ask for them in one short list before do
    - Filename: today's date + sequential NN (look at existing files to pick the next NN)
    - Sections: goal, outcome, what changed (table or list), commits in order, files added/changed, test growth (if any), final state
    - **Backward-looking only.** No "next session pickup" - that's the ledger's job (`docs/requirements.md` Open + In progress sections)
-   - Copy the proprietary header from any existing session log
+   - Copy the copyright header from any existing session log
 7. **Verify nothing references stale state.** Grep `HANDOFF.md` for the old version number; if any remain, update them.
 8. **Report back** to the main session: filenames you touched, lines added/changed, ledger entries that moved status this session.
 ## What NOT to do

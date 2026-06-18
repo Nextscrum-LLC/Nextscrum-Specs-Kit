@@ -92,11 +92,7 @@
       "PowerShell(foreach *)",
       "PowerShell(while *)",
       "PowerShell(switch *)",
-      "PowerShell([Environment]::GetEnvironmentVariable*)",
-      "Read(/REDACTED/scripts/**)",
-      "Bash(git -C REDACTED checkout -- .claude/settings.json)",
-      "Bash(git -C REDACTED add -A)",
-      "Bash(git -C REDACTED commit -F -)"
+      "PowerShell([Environment]::GetEnvironmentVariable*)"
     ],
     "deny": [
       "Bash(git push --force*)",
