@@ -63,3 +63,7 @@ are re-skinned per stack; see `.claude/rules/engineering.md`.
   see how often each agent fires and whether the R5 trigger map is well-calibrated.
 - `scripts/graph.mjs` (`npm run graph`) - generates a Mermaid module-import graph
   for a source tree. Inert until you set its `SRC_DIR_REL`.
+- [examples/logger/](../examples/logger/) - a dependency-free reference logger
+  for the R13 observability standard (structured lines, correlation id,
+  redaction, a code anchor that links a log line back to the SPEC and code).
+  Copy and reskin it, or swap in your stack's logger and keep the shape.

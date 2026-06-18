@@ -91,6 +91,21 @@ Handle the edge cases **as you write the code**, in the same pass, not as a late
 
 **How it is enforced:** convention plus `scripts/rules/28-boundary-cases.mjs` (warn), which flags a staged `plan.md` that has no "Boundary cases" section.
 
+## Observability (R13)
+
+Production bugs are found and fixed from logs. Make the logs serve both a developer and an AI coding agent: structured enough to parse, correlated enough to reconstruct one request, and anchored enough to jump from a log line to the code that emitted it.
+
+**The standard (every shipped error path obeys it):**
+
+- **Structured, one event per line.** Log a JSON object, never a bare string. Stable field names, so the logs are greppable by a person and parseable by a tool or an agent.
+- **A correlation id per unit of work.** Generate an id at each entry point (an HTTP request, a queue job) and thread it through every line for that work, so one request's whole path is reconstructable from a single grep. (Node: `AsyncLocalStorage`; other stacks: a context variable.)
+- **Levels mean something.** `debug` for development detail, `info` for normal lifecycle, `warn` for recoverable issues, `error` for actionable failures. Not everything is `info`.
+- **No secrets or PII in logs.** Redact credentials, tokens, and personal data by key, at the logging boundary, before anything reaches a sink.
+- **Errors are debuggable by a person or an agent.** An error event carries the message and stack (never a bare string), the operation, the inputs that mattered (redacted), the correlation id, and a code anchor (`module:function`) plus, when known, the `SPEC-NNN` it implements. That anchor is what lets an agent move from a production log line to the spec, plan, tests, and code without guessing.
+- **One logging entry point.** No bare `console.*` in shipped application code; route everything through the one logger (one source of truth per concept). Persistent failures also route to the error queue (`docs/error-queue.md`, surfaced by `/checkqueue`), so there is a single place to triage.
+
+**How it is enforced:** convention plus the `code-reviewer` agent (it walks logging discipline). To make "no bare `console.*`" mechanical, point the `banned-patterns` guard (`scripts/rules/40-banned-patterns.mjs`) at your application source. A copy-and-reskin reference logger that implements the whole standard (structured lines, correlation id, redaction, code anchor) lives in `examples/logger/`.
+
 ## Commenting standards
 
 - **Top of every file:** copyright header (R12, locked by `scripts/rules/29-ip-headers.mjs`; `npm run headers:fix` repairs) + one or two sentences explaining what this module does and why it exists.

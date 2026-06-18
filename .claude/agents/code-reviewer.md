@@ -150,6 +150,12 @@ If a change has no test, BLOCK unless explicitly trivial.
   inputs, not-found and error paths, limits and counts (0 / 1 / many / off-by-one),
   races and stale state, idempotency, and untrusted-data sinks. For a folder spec,
   the `plan.md` carries a "Boundary cases" list. Flag any obvious unhandled edge.
+- **Observability (R13):** new error paths log a structured event, not a bare
+  string; through the one logger, not bare `console.*`. The event carries a
+  correlation id, redacts secrets/PII, and (for an error) includes a code anchor
+  (`module:function`) plus, when known, the `SPEC-NNN`, so a dev or an agent can
+  debug from logs. Flag a swallowed error, a log line that leaks a secret, or an
+  error with no anchor.
 
 ## Output format
 

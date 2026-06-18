@@ -33,10 +33,10 @@ makes it different. Keep it honest and specific.>
 
 Every rule lives in one numbered sequence. R1-R8 and R12 are the kit's mechanical
 core (script-enforced and blocking via `npm run audit:rules` and the husky hooks).
-R9-R11 are engineering-discipline rules (behavioral: two backed by warn-checks,
-one by the `code-reviewer` agent). A fork adds its own rules by continuing from
-R13. A rule that is not machine-checked is not locked, so each one names what
-enforces it.
+R9-R11 and R13 are engineering-discipline rules (behavioral: two backed by
+warn-checks, the rest by the `code-reviewer` agent). A fork adds its own rules by
+continuing from R14. A rule that is not machine-checked is not locked, so each
+one names what enforces it.
 
 | # | Rule | Enforced by |
 |---|---|---|
@@ -52,12 +52,13 @@ enforces it.
 | R10 | **Platform-limitation registry:** confirmed upstream limitations recorded under `docs/platform-limitations/` (PL-NNN) with a re-verify date. | `scripts/rules/27-platform-limitation-refs.mjs` (warn) + convention |
 | R11 | **Boundary-case-first coding:** handle empty / error / limit / race / idempotency / untrusted cases in the same pass; list them in `plan.md`. | `scripts/rules/28-boundary-cases.mjs` (warn) + convention |
 | R12 | **File headers:** every source and docs file carries the copyright / IP header. | `scripts/rules/29-ip-headers.mjs` (`npm run headers:fix` to repair) |
-| R13+ | *Your project rules continue here.* | the check you pin for each |
+| R13 | **Observability:** structured, correlation-id logs with no secrets; errors carry a code anchor so a dev or agent can debug from logs. | convention + `code-reviewer` agent (+ `banned-patterns` guard for no bare `console.*`) |
+| R14+ | *Your project rules continue here.* | the check you pin for each |
 
-R1-R8 and R12 are **script-enforced** (mechanical, blocking). R9-R11 are
+R1-R8 and R12 are **script-enforced** (mechanical, blocking). R9-R11 and R13 are
 **engineering disciplines**: behavioral rules the kit still pins to a check where
-it can (R10 and R11 each carry a warn-check; R9 is carried by the `code-reviewer`
-agent). A rule with no machine check is a **convention** (trust plus review);
+it can (R10 and R11 each carry a warn-check; R9 and R13 are carried by the
+`code-reviewer` agent). A rule with no machine check is a **convention** (trust plus review);
 prefer a script when you add one. The audit also runs warn-only auxiliary checks
 (doc-orphans, spec-change-ripple, record-facts-ripple, plus the R10/R11 discipline
 checks) and three configurable guards (banned-patterns, surface-ripple,
