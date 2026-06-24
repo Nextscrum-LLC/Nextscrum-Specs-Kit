@@ -8,6 +8,32 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.10.0]
+
+### Added
+
+- Progressive testing, so the suite accretes and locks failures while individual
+  tests stay fixed contracts:
+  - **R15 regression-on-fix** (`scripts/check-regression-test.mjs`, commit-msg):
+    a `fix:` commit that changes source must add a regression test. Warn by
+    default; blocks under `SPECKIT_STRICT=1`; `[no-regression-test: <reason>]`
+    opt-out.
+  - **test-no-shrink** guard (`scripts/rules/32-test-no-shrink.mjs`): warns when
+    a commit deletes a test file or net-removes test lines.
+  - **`SPECKIT_STRICT`** flag flips R8 coverage and R15 from warn to block in one
+    switch (shared in `scripts/rules/_shared.mjs`).
+  - **`/regress`** command: drives the failing-test-first loop.
+
+## [0.9.0]
+
+### Added
+
+- **R14 no-secrets** pre-commit scan (`scripts/rules/31-no-secrets.mjs`): blocks
+  a commit whose staged diff adds a private key, an API token, or a
+  machine-specific home path. The content-level complement to `.gitignore`.
+  Reports file plus pattern name only; `nss-allow` per-line opt-out; `EXTRA_TERMS`
+  ships empty so the kit forbids nothing project-specific by default.
+
 ## [0.8.1]
 
 ### Fixed
