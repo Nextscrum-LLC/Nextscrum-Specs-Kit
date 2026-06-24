@@ -20,7 +20,7 @@ here and in `CLAUDE.md`, and scaffolds the enforcing check.
 These are the kit's locked rules. All are **script-enforced** (mechanical), run
 by `npm run audit:rules` and the husky hooks. R12 (file headers) is the same kind
 of rule and follows below; the engineering-discipline rules R9-R11 sit between
-them. A fork continues the sequence from R14 for its own rules.
+them. A fork continues the sequence from R15 for its own rules.
 
 | # | Rule | Type | Enforced by |
 |---|---|---|---|
@@ -76,6 +76,22 @@ file carries a copyright / IP header near the top. The kit preaches this in
 Config files (`.json`) have no comment syntax, so they are not scanned. Set the
 owner and the license note at the top of `scripts/rules/29-ip-headers.mjs`
 (RESKIN); `npm run headers:fix` backfills every file after you change them.
+
+## No-secrets rule (R14)
+
+Mechanical and blocking. The content-level complement to `.gitignore`: where
+`.gitignore` keeps sensitive *files* out of git, R14 keeps a secret or a personal
+path pasted *into a tracked file* out of git (the exact gap that let machine
+paths reach a tracked settings file).
+
+| # | Rule | Type | Enforced by |
+|---|---|---|---|
+| R14 | No secrets or machine-specific paths in committed content: API keys, private-key blocks, provider tokens, and home paths (`C:\Users\<name>`, `/home/<name>/`, `/Users/<name>/`) | script (blocking) | `scripts/rules/31-no-secrets.mjs` scans the staged diff (added lines only) and fails on a match; append `nss-allow` on a known-safe line to opt out |
+
+It scans only *added* lines, so pre-existing content is never re-flagged, and it
+reports the file and pattern name, never the matched value. RESKIN: add project
+codenames, internal hostnames, or a personal directory name to `EXTRA_TERMS` at
+the top of the check (it ships empty so the kit leaks nothing).
 
 ## Auxiliary checks (warn-only)
 
@@ -137,5 +153,5 @@ example shows the "Relates to" shape: the example ADR
 [`0002-example-decision.md`](../decisions/0002-example-decision.md) carries a
 banner back to R8, because the security invariant it records is locked by a
 tested acceptance criterion. As a fork grows rules that need their own detail
-docs (continuing from R14), give each such doc a "Backs rule" banner so the
+docs (continuing from R15), give each such doc a "Backs rule" banner so the
 reverse lookup never goes stale.

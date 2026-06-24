@@ -32,11 +32,11 @@ makes it different. Keep it honest and specific.>
 ## Rules index (the audit page - if a rule is not here, it is not locked)
 
 Every rule lives in one numbered sequence. R1-R8 and R12 are the kit's mechanical
-core (script-enforced and blocking via `npm run audit:rules` and the husky hooks).
-R9-R11 and R13 are engineering-discipline rules (behavioral: two backed by
-warn-checks, the rest by the `code-reviewer` agent). A fork adds its own rules by
-continuing from R14. A rule that is not machine-checked is not locked, so each
-one names what enforces it.
+core (script-enforced and blocking via `npm run audit:rules` and the husky hooks):
+R1-R8, R12, and R14. R9-R11 and R13 are engineering-discipline rules (behavioral:
+two backed by warn-checks, the rest by the `code-reviewer` agent). A fork adds its
+own rules by continuing from R15. A rule that is not machine-checked is not
+locked, so each one names what enforces it.
 
 | # | Rule | Enforced by |
 |---|---|---|
@@ -53,9 +53,10 @@ one names what enforces it.
 | R11 | **Boundary-case-first coding:** handle empty / error / limit / race / idempotency / untrusted cases in the same pass; list them in `plan.md`. | `scripts/rules/28-boundary-cases.mjs` (warn) + convention |
 | R12 | **File headers:** every source and docs file carries the copyright / IP header. | `scripts/rules/29-ip-headers.mjs` (`npm run headers:fix` to repair) |
 | R13 | **Observability:** structured, correlation-id logs with no secrets; errors carry a code anchor so a dev or agent can debug from logs. | convention + `code-reviewer` agent (+ `banned-patterns` guard for no bare `console.*`) |
-| R14+ | *Your project rules continue here.* | the check you pin for each |
+| R14 | **No secrets in commits:** no API keys, private keys, or machine-specific home paths (`C:\Users\<name>`, `/home/<name>/`) in staged content. | `scripts/rules/31-no-secrets.mjs` (blocking; `nss-allow` per-line opt-out) |
+| R15+ | *Your project rules continue here.* | the check you pin for each |
 
-R1-R8 and R12 are **script-enforced** (mechanical, blocking). R9-R11 and R13 are
+R1-R8, R12, and R14 are **script-enforced** (mechanical, blocking). R9-R11 and R13 are
 **engineering disciplines**: behavioral rules the kit still pins to a check where
 it can (R10 and R11 each carry a warn-check; R9 and R13 are carried by the
 `code-reviewer` agent). A rule with no machine check is a **convention** (trust plus review);

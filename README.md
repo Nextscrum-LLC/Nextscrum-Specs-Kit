@@ -127,8 +127,8 @@ never see Company B's tickets. That is not a feature, it is a law. So before any
 feature, you lock it as a rule.
 
 Run `/rule` and describe it: "every database read or write is scoped to the
-current tenant." The command assigns the next free number (R14, since the kit
-ships R1 through R13), adds a row to the rules table in `CLAUDE.md`, and scaffolds
+current tenant." The command assigns the next free number (R15, since the kit
+ships R1 through R14), adds a row to the rules table in `CLAUDE.md`, and scaffolds
 a check under `scripts/rules/` that flags any query missing a `tenant_id` filter.
 Now the rule is enforced, not remembered: a commit that adds an unscoped query
 fails `npm run audit:rules` before it can land.

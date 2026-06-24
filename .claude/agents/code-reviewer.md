@@ -71,7 +71,7 @@ Walk the rules index in CLAUDE.md. Spot-check each one for the diff. Common cros
 - **Untrusted input wrapping:** Anything externally-scraped or user-provided that ends up in an LLM prompt passes through the sanitizer with nonce-bearing delimiters. Prompt-injection defense.
 - **Parameterized SQL:** No string-concatenated user input. Dynamic identifiers (table/column names) must be allowlisted.
 - **LLM router (if the product uses an LLM):** All LLM calls go through one router (rate limits, spend caps, cost logging). No direct provider-SDK calls scattered across routes/services.
-- **No secrets in client code:** API keys live in server-side env (gitignored). New env vars added to `.env.example` with a safe default.
+- **No secrets in client code:** API keys live in server-side env (gitignored). New env vars added to `.env.example` with a safe default. (R14's no-secrets check blocks committed keys and machine paths mechanically; still flag any secret it cannot pattern-match.)
 - **SSRF defense:** Any new outbound `fetch()` from the backend with a user-controlled URL must use a DNS-pinned + private-range-blocking helper, OR document the threat explicitly. Block on naked `fetch(userUrl)`.
 - **Cost-DoS:** Any new expensive call (LLM, third-party API) must have caching (LRU + hash key) and rate limiting. Flag uncached cold paths.
 - **No secrets in logs:** Redaction config must cover any new sensitive field.

@@ -28,6 +28,7 @@
 - **No secrets in client code.** API keys live in server-side env (gitignored). The client only ever talks to the project's own backend. If you need new env vars, add them to `.env.example` with a default value.
 - **Privileged-API restraint.** Any client-side use of a powerful platform API (navigation, network interception, code injection, file access) goes through one audited path and is covered by a test. Document the threat model when adding one.
 - **SSRF defense for outbound fetch.** Any new fetch from the backend with a user-controlled URL must go through a DNS-pinned + private-range-blocking helper; for now, at minimum document the threat in the route.
+- **No secrets or machine paths in commits (R14).** API keys, private keys, and machine-specific home paths (`C:\Users\<name>`, `/home/<name>/`) never enter a commit. `scripts/rules/31-no-secrets.mjs` scans the staged diff and blocks them; `.gitignore` keeps sensitive files out. Together they cover both the file level and the content level (a secret pasted into a tracked file).
 
 ## Optimization
 
