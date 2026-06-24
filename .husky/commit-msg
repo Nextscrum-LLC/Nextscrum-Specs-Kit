@@ -29,10 +29,18 @@ if ! echo "$SUBJECT_LINE" | grep -qE '^(feat|fix|chore|docs|test|refactor|perf|c
   exit 1
 fi
 
-# R21: required review markers per file-pattern trigger map.
+# R5: required review markers per file-pattern trigger map.
 # Reads staged files + this commit message, fails if a required
 # [chain-tracer-ok] / [db-reviewer-ok] marker is missing.
 node scripts/check-review-markers.mjs "$MSG_FILE"
+RC=$?
+if [ $RC -ne 0 ]; then
+  exit $RC
+fi
+
+# R15: a fix commit must add a regression test. Advisory by default (warns);
+# SPECKIT_STRICT=1 makes it block. Opt out with [no-regression-test: <reason>].
+node scripts/check-regression-test.mjs "$MSG_FILE"
 RC=$?
 if [ $RC -ne 0 ]; then
   exit $RC

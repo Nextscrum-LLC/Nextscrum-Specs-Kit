@@ -31,3 +31,39 @@ export function walk(dir, exts, ignore = []) {
   }
   return out;
 }
+
+/**
+ * Strict mode. The advisory test rules (R8 coverage, R15 regression-on-fix)
+ * warn by default and block when this is on. Flip with SPECKIT_STRICT=1.
+ */
+export function isStrict() {
+  return /^(1|true|yes|on)$/i.test(process.env.SPECKIT_STRICT || "");
+}
+
+// RESKIN: adjust these to your project's test-file conventions.
+const TEST_FILE_RES = [
+  /\.(test|spec)\.[cm]?[jt]sx?$/i, // foo.test.ts, bar.spec.mjs
+  /(^|\/)(__tests__|tests?|e2e|specs?)\//i, // anything under a tests/ or e2e/ dir
+  /_test\.(py|go|rb)$/i, // foo_test.go, foo_test.py
+  /(^|\/)test_[^/]+\.py$/i, // test_foo.py
+  /Test\.(java|kt|cs)$/, // FooTest.java
+  /\.feature$/i, // cucumber/gherkin
+];
+
+const CODE_EXTS = new Set([
+  ".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx", ".py", ".go", ".rb", ".php",
+  ".java", ".cs", ".rs", ".kt", ".swift", ".c", ".cc", ".cpp", ".h", ".hpp",
+]);
+
+/** True if a path looks like a test file (one source of truth for R15 + no-shrink). */
+export function isTestFile(p) {
+  return TEST_FILE_RES.some((re) => re.test(p.replace(/\\/g, "/")));
+}
+
+/** True if a path is application/source code (a code extension, not a test, not docs). */
+export function isSourceFile(p) {
+  const path = p.replace(/\\/g, "/");
+  if (isTestFile(path) || path.startsWith("docs/")) return false;
+  const dot = path.lastIndexOf(".");
+  return dot >= 0 && CODE_EXTS.has(path.slice(dot).toLowerCase());
+}

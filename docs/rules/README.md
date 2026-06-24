@@ -20,7 +20,7 @@ here and in `CLAUDE.md`, and scaffolds the enforcing check.
 These are the kit's locked rules. All are **script-enforced** (mechanical), run
 by `npm run audit:rules` and the husky hooks. R12 (file headers) is the same kind
 of rule and follows below; the engineering-discipline rules R9-R11 sit between
-them. A fork continues the sequence from R15 for its own rules.
+them. A fork continues the sequence from R16 for its own rules.
 
 | # | Rule | Type | Enforced by |
 |---|---|---|---|
@@ -93,6 +93,24 @@ reports the file and pattern name, never the matched value. RESKIN: add project
 codenames, internal hostnames, or a personal directory name to `EXTRA_TERMS` at
 the top of the check (it ships empty so the kit leaks nothing).
 
+## Progressive testing (R8, R15, and the no-shrink guard)
+
+The test suite is meant to **accrete**: new specs add tests, and every failure
+becomes a permanent regression case. Three pieces keep it growing, not shrinking.
+
+| Rule / check | What it does | Strictness |
+|---|---|---|
+| R8 test-coverage (`25-test-coverage.mjs`) | every EARS criterion is referenced by a test in `tests.md` | warn; blocks under `SPECKIT_STRICT=1` |
+| R15 regression-on-fix (`check-regression-test.mjs`) | a `fix:` commit that changes source must also add a test (the failing-test-first loop, Playbook B) | warn; blocks under `SPECKIT_STRICT=1`; `[no-regression-test: <reason>]` opt-out |
+| test-no-shrink (`32-test-no-shrink.mjs`) | warns when a commit deletes a test file or net-removes test lines | warn only |
+
+This is "progressive" in the healthy sense: the *suite* grows and locks each bug
+as a fixed case. Individual tests stay fixed contracts; a test that rewrites
+itself to keep passing would stop catching regressions, so the kit never does
+that. The `/regress` command drives the loop: reproduce, write the failing test
+first, then fix until green. Flip everything to blocking at once with the
+`SPECKIT_STRICT=1` environment variable when the team is ready.
+
 ## Auxiliary checks (warn-only)
 
 These run in the audit but do not block; they surface drift so it does not pile
@@ -153,5 +171,5 @@ example shows the "Relates to" shape: the example ADR
 [`0002-example-decision.md`](../decisions/0002-example-decision.md) carries a
 banner back to R8, because the security invariant it records is locked by a
 tested acceptance criterion. As a fork grows rules that need their own detail
-docs (continuing from R15), give each such doc a "Backs rule" banner so the
+docs (continuing from R16), give each such doc a "Backs rule" banner so the
 reverse lookup never goes stale.

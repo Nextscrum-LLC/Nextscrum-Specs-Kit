@@ -66,8 +66,8 @@ database, test runner), the repositories involved, and anything already decided.
 
 8. **Fill in CLAUDE.md**: the project description and the locked decisions. Keep
    the kit's rules (R1-R8, R12, R14 mechanical core; R9-R11 plus R13 engineering
-   disciplines) in the rules index; add your own rules by continuing the sequence
-   from R15 (the `/rule` command scaffolds each one). For every rule, pin a check
+   disciplines; R15 regression-on-fix) in the rules index; add your own rules by
+   continuing the sequence from R16 (the `/rule` command scaffolds each one). For every rule, pin a check
    in `scripts/rules/` so it cannot drift. Set the header owner and license in
    `scripts/rules/29-ip-headers.mjs`, then run `npm run headers:fix`. For R13,
    adopt the reference logger in `examples/logger/` (or your stack's logger) and,

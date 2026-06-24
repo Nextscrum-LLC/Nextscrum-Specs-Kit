@@ -16,9 +16,9 @@ enforces it.
    unenforceable rule belongs in a guideline doc, not the audit page.
 
 2. **Assign the next number.** Read the Rules index table in `CLAUDE.md`, find the
-   highest `R#`, and use the next integer. The kit ships R1-R14 (R1-R8, R12, R14
-   mechanical core; R9-R11 plus R13 engineering disciplines); a project's own
-   rules continue from R15.
+   highest `R#`, and use the next integer. The kit ships R1-R15 (R1-R8, R12, R14
+   mechanical core; R9-R11 plus R13 engineering disciplines; R15 regression-on-fix);
+   a project's own rules continue from R16.
 
 3. **Append the row** to the Rules index in `CLAUDE.md`: the number, the rule in
    bold, and what enforces it (the check file you create in the next step).

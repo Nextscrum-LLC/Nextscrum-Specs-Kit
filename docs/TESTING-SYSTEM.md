@@ -251,8 +251,15 @@ matrix.
   runs under `npm run audit:rules`. It surfaces a warning when a folder spec
   lacks `tests.md` or leaves an EARS criterion with no test reference. It is
   advisory by default (surfaced as a warning so an in-progress spec does not
-  block a commit); make it a hard done-gate block when your team is ready,
-  by flipping it in the audit config.
+  block a commit); set `SPECKIT_STRICT=1` to make it (and R15) hard blocks when
+  your team is ready.
+- **Every failure becomes a permanent test (R15).** A `fix:` commit that changes
+  source must add a regression test; `scripts/check-regression-test.mjs` checks
+  it in the commit-msg hook (warn by default, block under `SPECKIT_STRICT=1`).
+  The `/regress` command drives the failing-test-first loop, and the warn-only
+  `test-no-shrink` guard flags a commit that deletes tests, so the suite accretes
+  rather than erodes. The suite grows; individual tests stay fixed (a test that
+  rewrote itself to pass would stop catching regressions).
 
 The tooling cannot run an interactive question set on its own, so the
 clarify pass is not silently automated. Instead it is auto-triggered by the

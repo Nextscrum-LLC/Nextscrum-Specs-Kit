@@ -20,7 +20,7 @@
 
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { resolve, join } from "node:path";
-import { ROOT } from "./_shared.mjs";
+import { ROOT, isStrict } from "./_shared.mjs";
 
 // RESKIN: point this at your specs folder if it differs.
 const SPECS_DIR = resolve(ROOT, "docs", "specs");
@@ -81,7 +81,7 @@ export function coverageIssues(specsDir) {
 export default {
   id: "spec-test-coverage",
   label: "test-coverage: every EARS criterion referenced by tests.md (warn-only)",
-  async run({ ok, warn }) {
+  async run({ fail, ok, warn }) {
     if (!existsSync(SPECS_DIR)) {
       ok("R8 test-coverage: no specs/ folder yet, nothing to check");
       return;
@@ -91,14 +91,16 @@ export default {
       ok("R8 test-coverage: every spec folder's criteria are referenced in tests.md");
       return;
     }
+    // Advisory by default; SPECKIT_STRICT=1 makes coverage a hard block.
+    const emit = isStrict() ? fail : warn;
     for (const i of issues) {
       if (i.kind === "no-tests-md") {
-        warn(
+        emit(
           `R8 test-coverage: ${i.spec} has ${i.missing.length} acceptance criteria but no tests.md. Generate the coverage matrix.`,
         );
       } else {
         const list = i.missing.map((n) => `C${n}`).join(", ");
-        warn(
+        emit(
           `R8 test-coverage: ${i.spec} criteria not referenced in tests.md: ${list}. Cover the gaps.`,
         );
       }

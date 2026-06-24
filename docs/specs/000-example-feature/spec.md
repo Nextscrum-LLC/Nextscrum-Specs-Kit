@@ -44,7 +44,7 @@ each map cleanly to a contract, a task, and a test.
 - **The done-gate (R6):** closes only at NextScrum-manual with the UAT
   checklist walked.
 
-> RESKIN: the R-numbers map to R1-R14 in this kit's `CLAUDE.md`; point
+> RESKIN: the R-numbers map to R1-R15 in this kit's `CLAUDE.md`; point
 > "Rules touched" at your own rule numbers.
 
 ## Relationships

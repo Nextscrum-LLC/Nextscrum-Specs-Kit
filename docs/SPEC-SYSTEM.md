@@ -336,7 +336,7 @@ here so the whole pipeline is visible in one place:
 | Done / verify | R6, R8 | the done-gate (R6) + acceptance criteria, tested under R8 |
 | Deploy | deploy workflow (practice) | `dev` to staging, `main` to production via CI |
 
-> RESKIN: the R-numbers above mirror this kit's rule book (R1-R14 in
+> RESKIN: the R-numbers above mirror this kit's rule book (R1-R15 in
 > `CLAUDE.md`). Wire each delivery step to your own rules and CI.
 
 The two halves meet at the finish line: a spec is not `done` until QA and
@@ -396,6 +396,10 @@ product verified by hand).
 
 ### B. A bug appears
 
+The `/regress` command drives this loop end to end; the steps below are what it
+does, and the regression-on-fix rule (R15) checks that a `fix:` commit carries
+its test.
+
 1. Add a `SPEC-NNN` row (bugs are small specs). Most stay inline.
 2. In `spec.md`, write the bug as an EARS guard: "IF `<bad case>` THEN THE
    SYSTEM SHALL `<correct behavior>`." That sentence is your failing test.
@@ -406,7 +410,9 @@ product verified by hand).
    playwright-runner agent).
 6. **Record Facts** only if the fix changed a documented decision or
    design; most bug fixes do not.
-7. Verify and close (the done-gate (R6)).
+7. Verify and close (the done-gate (R6)). The commit lands as `fix:`, so R15
+   confirms the regression test rode along; the `test-no-shrink` guard confirms
+   the suite did not lose coverage on the way.
 
 ### C. A requirement changes (the ripple case)
 

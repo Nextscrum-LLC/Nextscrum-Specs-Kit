@@ -43,8 +43,9 @@ rules index, which is the source of truth; this is a pointer):
 - **R12 File headers:** every source and docs file carries the copyright header.
 - **R13 Observability:** structured, correlation-id logs with no secrets; errors carry a code anchor so a dev or agent can debug from logs.
 - **R14 No secrets in commits:** no API keys, private keys, or machine-specific paths in staged content (blocking pre-commit scan).
+- **R15 Regression on fix:** a `fix:` commit adds a regression test (warn; blocks under `SPECKIT_STRICT=1`).
 
-A fork's own rules continue from R15.
+A fork's own rules continue from R16.
 
 ## Pre-commit machinery
 

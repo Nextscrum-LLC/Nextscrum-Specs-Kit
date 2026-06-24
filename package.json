@@ -1,6 +1,6 @@
 {
   "name": "nextscrum-specs-kit",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "private": false,
   "type": "module",
   "description": "Stack-neutral specs kit: spec-driven development with machine-enforced discipline (rule audit, ledger done-gate, review markers, husky hooks).",
@@ -28,7 +28,7 @@
     "headers:fix": "node scripts/add-ip-headers.mjs",
     "graph": "node scripts/graph.mjs",
     "prepare": "husky",
-    "test": "node scripts/check-ledger-done-gate.mjs --self-test && node scripts/check-review-markers.mjs --self-test && node scripts/check-doc-orphans.mjs --self-test && node scripts/rules/23-spec-refs.mjs --self-test && node scripts/rules/25-test-coverage.mjs --self-test && node scripts/rules/24-record-facts-ripple.mjs --self-test && node scripts/rules/26-spec-change-ripple.mjs --self-test && node scripts/rules/27-platform-limitation-refs.mjs --self-test && node scripts/rules/28-boundary-cases.mjs --self-test && node scripts/rules/29-ip-headers.mjs --self-test && node scripts/rules/30-version-sync.mjs --self-test && node scripts/rules/31-no-secrets.mjs --self-test && node scripts/rules/40-banned-patterns.mjs --self-test && node scripts/rules/41-surface-ripple.mjs --self-test && node scripts/log-agent-invocation.mjs --self-test && node scripts/graph.mjs --self-test",
+    "test": "node scripts/check-ledger-done-gate.mjs --self-test && node scripts/check-review-markers.mjs --self-test && node scripts/check-regression-test.mjs --self-test && node scripts/check-doc-orphans.mjs --self-test && node scripts/rules/23-spec-refs.mjs --self-test && node scripts/rules/25-test-coverage.mjs --self-test && node scripts/rules/24-record-facts-ripple.mjs --self-test && node scripts/rules/26-spec-change-ripple.mjs --self-test && node scripts/rules/27-platform-limitation-refs.mjs --self-test && node scripts/rules/28-boundary-cases.mjs --self-test && node scripts/rules/29-ip-headers.mjs --self-test && node scripts/rules/30-version-sync.mjs --self-test && node scripts/rules/31-no-secrets.mjs --self-test && node scripts/rules/32-test-no-shrink.mjs --self-test && node scripts/rules/40-banned-patterns.mjs --self-test && node scripts/rules/41-surface-ripple.mjs --self-test && node scripts/log-agent-invocation.mjs --self-test && node scripts/graph.mjs --self-test",
     "docs:serve": "docsify serve . --port 4000"
   },
   "devDependencies": {

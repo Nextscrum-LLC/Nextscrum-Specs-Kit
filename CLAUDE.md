@@ -35,7 +35,7 @@ Every rule lives in one numbered sequence. R1-R8 and R12 are the kit's mechanica
 core (script-enforced and blocking via `npm run audit:rules` and the husky hooks):
 R1-R8, R12, and R14. R9-R11 and R13 are engineering-discipline rules (behavioral:
 two backed by warn-checks, the rest by the `code-reviewer` agent). A fork adds its
-own rules by continuing from R15. A rule that is not machine-checked is not
+own rules by continuing from R16. A rule that is not machine-checked is not
 locked, so each one names what enforces it.
 
 | # | Rule | Enforced by |
@@ -54,15 +54,19 @@ locked, so each one names what enforces it.
 | R12 | **File headers:** every source and docs file carries the copyright / IP header. | `scripts/rules/29-ip-headers.mjs` (`npm run headers:fix` to repair) |
 | R13 | **Observability:** structured, correlation-id logs with no secrets; errors carry a code anchor so a dev or agent can debug from logs. | convention + `code-reviewer` agent (+ `banned-patterns` guard for no bare `console.*`) |
 | R14 | **No secrets in commits:** no API keys, private keys, or machine-specific home paths (`C:\Users\<name>`, `/home/<name>/`) in staged content. | `scripts/rules/31-no-secrets.mjs` (blocking; `nss-allow` per-line opt-out) |
-| R15+ | *Your project rules continue here.* | the check you pin for each |
+| R15 | **Regression on fix:** a `fix:` commit adds a regression test, so every failure becomes a permanent case. | `scripts/check-regression-test.mjs` via `.husky/commit-msg` (warn; `[no-regression-test:]` opt-out) |
+| R16+ | *Your project rules continue here.* | the check you pin for each |
 
 R1-R8, R12, and R14 are **script-enforced** (mechanical, blocking). R9-R11 and R13 are
 **engineering disciplines**: behavioral rules the kit still pins to a check where
 it can (R10 and R11 each carry a warn-check; R9 and R13 are carried by the
-`code-reviewer` agent). A rule with no machine check is a **convention** (trust plus review);
-prefer a script when you add one. The audit also runs warn-only auxiliary checks
-(doc-orphans, spec-change-ripple, record-facts-ripple, plus the R10/R11 discipline
-checks) and three configurable guards (banned-patterns, surface-ripple,
+`code-reviewer` agent). **R8 (coverage) and R15 (regression-on-fix) are the
+test-growth rules: they warn by default and block under `SPECKIT_STRICT=1`**, so
+the suite keeps accreting tests without halting work in progress. A rule with no
+machine check is a **convention** (trust plus review); prefer a script when you
+add one. The audit also runs warn-only auxiliary checks (doc-orphans,
+spec-change-ripple, record-facts-ripple, test-no-shrink, plus the R10/R11
+discipline checks) and three configurable guards (banned-patterns, surface-ripple,
 version-sync) that stay inert until you point them at your project. Full reference:
 [docs/rules/README.md](docs/rules/README.md).
 
