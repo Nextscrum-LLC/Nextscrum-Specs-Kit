@@ -50,6 +50,7 @@ nextscrum-specs-kit/
     ├── SPEC-SYSTEM.md         ← the lifecycle: Rules → Specify → Plan → Analyze → Build → Record
     ├── SPEC-PLAYBOOK.md       ← the chat-driven control surface + protective gates + scenarios
     ├── TESTING-SYSTEM.md      ← clarify pass, ISO/IEC 25010 dimension matrix, SPEC-NNN/C#/dim/case ids
+    ├── PARALLEL-AGENTS.md     ← many agents, one codebase: lane plan, file ownership, verifier separation
     ├── COMPARISON.md          ← how this kit compares to other spec systems
     ├── quality-budgets.md     ← the numbers tests assert against (re-skin per project)
     ├── requirements.md        ← the ledger (single source of truth; ships empty with one example)

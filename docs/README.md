@@ -15,6 +15,11 @@ Where everything lives, so you do not have to grep.
   accessibility), and the `SPEC-NNN/C#/dimension/case` naming scheme.
 - `quality-budgets.md` - the concrete numbers and invariants tests assert
   against. Re-skin per project.
+- `PARALLEL-AGENTS.md` - how to put several agents on one codebase at once:
+  the lane plan you write BEFORE splitting, one owner per file, why trunk
+  spawns the verifier instead of the builder, three-round loops, merging by
+  ascending blast radius, and surviving a session that ends without warning.
+  Every rule in it is traced to the failure that produced it.
 - [COMPARISON.md](COMPARISON.md) - how this kit compares to GitHub Spec Kit,
   Kiro, OpenSpec, BMAD, Tessl, and Claude Code native, and the one idea
   (enforcement over generation) that sets it apart.

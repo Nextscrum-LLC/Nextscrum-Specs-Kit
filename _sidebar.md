@@ -11,6 +11,7 @@
   - [Chat playbook](/docs/SPEC-PLAYBOOK.md)
   - [Testing system](/docs/TESTING-SYSTEM.md)
   - [Quality budgets](/docs/quality-budgets.md)
+  - [Parallel agents](/docs/PARALLEL-AGENTS.md)
 
 - Reference
   - [Rules and checks](/docs/rules/README.md)
