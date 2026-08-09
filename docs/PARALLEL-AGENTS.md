@@ -60,10 +60,12 @@ criteria.
 
 Two things belong in every brief:
 
-- **"Commit after each completed task, inside your worktree. Not at the
-  end."** This is the highest-value sentence in the whole document. See
-  "Surviving an interruption" below.
+- **"Commit after each change, inside your worktree. Not at the end."**
 - **"Do not merge, and do not spawn your own verifier."**
+
+But do not rely on the first one. See the next section: a brief is an ask,
+and asks get forgotten under a token limit. The guarantee has to come from
+outside the agent.
 
 Where a lane has a real judgement call in it, say so and tell it to report
 rather than guess. A lane told "if the honest answer is that we cannot tell,
@@ -155,18 +157,87 @@ for is a session that never reaches its end.
 It is not a handoff document. A handoff is the narrative of what happened;
 this is the pointer to what is next. Keep both.
 
-**On resume: run the stranded-work check before starting anything new.**
+**Sweep the worktrees from outside. Do not rely on the brief.**
+
+Telling an agent to commit often is an instruction, and instructions are the
+first thing to go when a context window fills. The durable version is a
+script trunk runs, which does not care what the agent remembered:
 
 ```bash
+# for every agent worktree: if it is dirty, commit it
 for w in .worktrees/agent-*/; do
-  echo "== $w"; git -C "$w" status --short | head
+  git -C "$w" status --porcelain | grep -q . || continue
+  git -C "$w" add -A
+  git -C "$w" -c core.hooksPath=/dev/null commit -q -m     "chore(salvage): trunk swept this worktree. NO REVIEWER HAS SEEN THIS."
 done
 ```
 
-Anything listed is uncommitted work from an agent that died. Commit it inside
-its own worktree with a message saying plainly that no reviewer has seen it.
-Then decide whether to keep it. Never merge salvaged work without running the
-verifiers on it.
+Run it **before spawning, between merges, and whenever a session looks like
+it may end.** Wire it to a command name so it is one word, not a loop
+somebody has to remember the shape of.
+
+It is safe by construction: a worktree is one agent's private branch, so a
+commit there cannot touch trunk, cannot touch another lane, and cannot reach
+a remote. Bypass hooks deliberately, because the job is to PRESERVE work,
+not to certify it, and a salvage commit that fails a lint gate defeats
+itself. Say so in every message, so a salvage commit can never be mistaken
+for a reviewed one. **Never merge salvaged work without running the
+verifiers on it.**
+
+The first time this ran on a real repo it found twelve uncommitted files in
+two worktrees whose agents had died hours earlier.
+
+**Then check the other half: work that IS committed and was never merged.**
+
+Sweeping dirty worktrees is the obvious half, and on its own it leaves a
+loophole big enough to lose a feature through. An agent that did exactly what
+its brief asked, committed each change, and then died leaves a clean
+worktree. A sweep that only looks for uncommitted files calls that worktree
+clean and walks straight past finished work. Worse, a worktree directory can
+be removed while its branch survives, so the work is invisible to anything
+that walks directories at all.
+
+So the sweep also lists every agent branch holding commits the current HEAD
+does not, flagging the ones whose directory is gone:
+
+```bash
+for b in $(git for-each-ref --format='%(refname:short)' 'refs/heads/agent-*'); do
+  n=$(git rev-list --count "HEAD..$b")
+  [ "$n" = 0 ] || echo "$b: $n unmerged commit(s)"
+done
+```
+
+It lists and does not merge. A salvaged branch has not been through a
+verifier, and merging it quietly is the exact thing this protocol exists to
+prevent.
+
+**Keep an adjudication file, or the warning stops working.** A warning that
+never shrinks is a warning nobody reads. The second time you see the same two
+branches you skim; the third time you stop looking, and the fourth time
+carries something new. Record one line per decided branch in a **tracked**
+file (`docs/worktree-adjudications.md`) with the verdict and the reasoning,
+and have the sweep move those into a separate "already decided" section.
+Everything left under UNMERGED WORK is then genuinely news.
+
+Tracked matters. The first draft of that file lived beside the worktrees, in
+an ignored directory, so the decisions would have vanished on a fresh clone
+and the next session would have re-investigated the same branches from
+scratch.
+
+Write the verdict with its evidence, not just a label. "Superseded" is
+useless six weeks later; "superseded, this holds the file at 939 lines
+against trunk's 1259 from the same team's second worktree, which three
+reviewers cleared" can be checked by someone who was not there.
+
+**Check both halves at the START of every session, before new work.** This is
+the point where a previous session's loss is still recoverable and the point
+where you are least likely to think of it. Put it in the session protocol
+above the handoff read, so it happens whether or not anyone remembers the
+last session ended badly.
+
+One caveat worth knowing: a worktree whose agent process is still holding it
+cannot be removed, and force-removing a locked worktree to tidy a report is
+not a trade worth making. Record it in the adjudication file and move on.
 
 ## The failure mode worth naming separately
 
@@ -204,7 +275,9 @@ walks one page instead of opening every spec folder.
 
 ## Copy-paste kickoff
 
-> Run a parallel session. Write the lane plan to `sessions/<run>-plan.md`
+> Run a parallel session. First sweep what earlier sessions left: commit any
+> dirty agent worktree, and list any agent branch holding unmerged commits,
+> including ones whose directory is gone. Then write the lane plan to `sessions/<run>-plan.md`
 > first: lanes, the folder each owns, shared files with one owner each,
 > reserved migration numbers, and where lanes touch. Freeze those interfaces.
 > One writer per worktree, self-contained briefs, commit each task as you
@@ -223,7 +296,10 @@ Before spawning:
 - [ ] Every file has exactly one owner
 - [ ] Shared files named, with an append-only escape hatch
 - [ ] Resource numbers reserved
-- [ ] Each brief self-contained and says commit-per-task and do-not-merge
+- [ ] Each brief self-contained and says commit-per-change and do-not-merge
+- [ ] The worktree sweep is wired to a command, and you ran it
+- [ ] Previous sessions checked: dirty worktrees swept AND unmerged branches
+      listed, each one either adjudicated or still open in front of you
 
 While running:
 
