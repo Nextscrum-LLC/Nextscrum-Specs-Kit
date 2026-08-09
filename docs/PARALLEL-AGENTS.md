@@ -235,6 +235,17 @@ where you are least likely to think of it. Put it in the session protocol
 above the handoff read, so it happens whether or not anyone remembers the
 last session ended badly.
 
+**Then make that step mechanical, because a protocol step is still prose.**
+A session-start instruction is the same kind of thing as "remember to run the
+reviewer", and the same thing happens to it. Add a warn-only rung to whatever
+already runs on every commit: list agent branches ahead of HEAD, subtract the
+adjudicated ones, warn on the rest. It fires whether or not anybody remembered
+the session-start step, and it costs nothing when the list is empty.
+
+Warn, do not fail. An unmerged branch from last week is not a defect in the
+commit being made, and blocking unrelated work on it just teaches people to
+route around the checker.
+
 One caveat worth knowing: a worktree whose agent process is still holding it
 cannot be removed, and force-removing a locked worktree to tidy a report is
 not a trade worth making. Record it in the adjudication file and move on.
@@ -300,6 +311,8 @@ Before spawning:
 - [ ] The worktree sweep is wired to a command, and you ran it
 - [ ] Previous sessions checked: dirty worktrees swept AND unmerged branches
       listed, each one either adjudicated or still open in front of you
+- [ ] That check is wired into the per-commit rule runner, not only into the
+      session protocol prose
 
 While running:
 
