@@ -24,6 +24,33 @@ Three roles, and keeping them separate is most of the value.
 The single most common mistake is collapsing the last two. An agent that
 grades its own work grades its intentions.
 
+## The orchestration default: one controller, lanes only when they pay
+
+Two defaults follow from that shape, and both sit with trunk.
+
+**Trunk is the controller and the only thing that talks to the human.** It
+holds the conversation, takes the ask, decides how the work is shaped, and
+reports back. Lanes build and commit; they do not merge, and they do not
+message the human. A lane that stops to ask something is a lane that has
+stopped, and a human answering five lanes separately ends up holding five
+versions of the plan with no record of which lane heard what. Questions go into
+the banked-questions section of the lane plan instead, where they are visible to
+everyone and answered once, by trunk.
+
+**Lanes are a choice, not the default shape of work.** Before writing a lane
+plan, trunk decides whether the work is worth splitting at all. Parallelism has
+a fixed price: a plan, a worktree and a self-contained brief per lane, a
+verifier pass per lane, and a merge with full verification between each one. For
+a one-line change, or anything that lives in a single file, that price is larger
+than the work itself, and it manufactures a merge surface where there was none.
+Sequential work in the main session has zero coordination cost, and zero is hard
+to beat.
+
+Split when the work genuinely divides: several pieces over disjoint files, or
+one feature whose layers can be frozen at an interface. Answer "what does a
+second lane buy here" out loud before spawning. If the honest answer is that it
+finishes twenty minutes sooner, do it in one.
+
 ## Before you split: write the lane plan
 
 Write `sessions/<run>-plan.md` before spawning anything, and link it from the
@@ -335,3 +362,5 @@ Before merging each lane:
   should expect tests to cover
 - [Rules and checks](/docs/rules/README.md) for making a rule enforceable
   rather than advisory
+- [Design debate](/docs/DESIGN-DEBATE.md) for settling a hard-to-reverse design
+  before any of this starts
