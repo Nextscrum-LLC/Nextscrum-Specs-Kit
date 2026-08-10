@@ -13,6 +13,7 @@
   - [Quality budgets](/docs/quality-budgets.md)
   - [Parallel agents](/docs/PARALLEL-AGENTS.md)
   - [Design debate](/docs/DESIGN-DEBATE.md)
+  - [Writing less code](/docs/WRITING-LESS-CODE.md)
 
 - Reference
   - [Rules and checks](/docs/rules/README.md)

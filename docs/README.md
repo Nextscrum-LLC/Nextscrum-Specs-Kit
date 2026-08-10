@@ -25,6 +25,11 @@ Where everything lives, so you do not have to grep.
   three seats that each hunt a different failure, durable over newest, naming
   the quality you traded away, two rounds then decide, and a re-verify date on
   the record.
+- `WRITING-LESS-CODE.md` - the two disciplines of a small change: the ladder
+  walked before anything is written (does it need to exist, is it already here,
+  does the platform do it), and a diff where every changed line traces to the
+  ask, with adjacent code left alone, dead code mentioned rather than deleted,
+  and nothing speculative built for a second caller that does not exist yet.
 - [COMPARISON.md](COMPARISON.md) - how this kit compares to GitHub Spec Kit,
   Kiro, OpenSpec, BMAD, Tessl, and Claude Code native, and the one idea
   (enforcement over generation) that sets it apart.

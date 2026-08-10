@@ -52,6 +52,7 @@ nextscrum-specs-kit/
     ├── TESTING-SYSTEM.md      ← clarify pass, ISO/IEC 25010 dimension matrix, SPEC-NNN/C#/dim/case ids
     ├── PARALLEL-AGENTS.md     ← many agents, one codebase: lane plan, file ownership, verifier separation
     ├── DESIGN-DEBATE.md       ← argue two options before a hard-to-reverse build, then record what lost
+    ├── WRITING-LESS-CODE.md   ← the ladder walked before writing, and a diff where every line traces to the ask
     ├── COMPARISON.md          ← how this kit compares to other spec systems
     ├── quality-budgets.md     ← the numbers tests assert against (re-skin per project)
     ├── requirements.md        ← the ledger (single source of truth; ships empty with one example)
