@@ -12,6 +12,7 @@
   - [Testing system](/docs/TESTING-SYSTEM.md)
   - [Quality budgets](/docs/quality-budgets.md)
   - [Parallel agents](/docs/PARALLEL-AGENTS.md)
+  - [Design debate](/docs/DESIGN-DEBATE.md)
 
 - Reference
   - [Rules and checks](/docs/rules/README.md)

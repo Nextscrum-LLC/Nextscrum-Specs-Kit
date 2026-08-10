@@ -20,6 +20,11 @@ Where everything lives, so you do not have to grep.
   spawns the verifier instead of the builder, three-round loops, merging by
   ascending blast radius, and surviving a session that ends without warning.
   Every rule in it is traced to the failure that produced it.
+- `DESIGN-DEBATE.md` - what to do before a hard-to-reverse build: the trigger
+  that decides whether a debate is owed at all, two real options argued from
+  three seats that each hunt a different failure, durable over newest, naming
+  the quality you traded away, two rounds then decide, and a re-verify date on
+  the record.
 - [COMPARISON.md](COMPARISON.md) - how this kit compares to GitHub Spec Kit,
   Kiro, OpenSpec, BMAD, Tessl, and Claude Code native, and the one idea
   (enforcement over generation) that sets it apart.
